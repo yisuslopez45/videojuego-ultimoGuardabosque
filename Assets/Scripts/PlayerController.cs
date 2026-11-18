@@ -13,7 +13,8 @@ public class playerController : MonoBehaviour
     private CharacterController controller;
     private Vector2 moveInput;
     private float verticalVelocity;
-    private bool jumpPressed;
+    private bool jumpPressed;   
+    private Animator animator;
 
     Transform cameraTransform;    
 
@@ -21,6 +22,7 @@ public class playerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform; 
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -28,6 +30,10 @@ public class playerController : MonoBehaviour
     {
 
         bool isGrounded = controller.isGrounded;
+        float speedValue = moveInput.magnitude;
+
+        animator.SetFloat("Speed", speedValue);
+
         if(isGrounded && verticalVelocity < 0)
         {
             verticalVelocity = -3f;
