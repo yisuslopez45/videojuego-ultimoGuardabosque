@@ -352,8 +352,8 @@ Transform:
   m_GameObject: {fileID: 687726573}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.04, y: 0.25984, z: 5.73}
-  m_LocalScale: {x: 12.492062, y: 0.26946518, z: 8.088396}
+  m_LocalPosition: {x: -7.25, y: 0.25984, z: -4.94}
+  m_LocalScale: {x: 36.341866, y: 0.66277236, z: 32.39952}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -656,11 +656,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerController
   speed: 5
+  runSpeed: 9
+  speedDampTime: 0.1
   gravity: -20
   jumpHeight: 3
-  spawnPoint: {fileID: 0}
   respawnHeightOffset: 1.5
   rotationSpeed: 10
+  spawnPoint: {fileID: 0}
 --- !u!1 &1367367838
 GameObject:
   m_ObjectHideFlags: 0
