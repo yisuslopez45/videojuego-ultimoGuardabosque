@@ -14,6 +14,7 @@ public class playerController : MonoBehaviour
     private Vector2 moveInput;
     private float verticalVelocity;
     private bool jumpPressed;   
+    private bool runPressed;
     private Animator animator;
 
     Transform cameraTransform;    
@@ -34,6 +35,9 @@ public class playerController : MonoBehaviour
 
         animator.SetFloat("Speed", speedValue);
 
+        //Indica si el personaje(modelo) esta en el suelo
+        animator.SetBool("IsGrounded", isGrounded);
+
         if(isGrounded && verticalVelocity < 0)
         {
             verticalVelocity = -3f;
@@ -43,9 +47,22 @@ public class playerController : MonoBehaviour
         {
             verticalVelocity = Mathf.Sqrt(jumpHeight * -3f * gravity);
             jumpPressed = false;
+
+            //Indica al animator que estamos saltando
+            animator.SetTrigger("Jump");
+        }
+
+        if(runPressed) {
+            animator.SetTrigger("Run");
+            animator.SetBool("IsRunning",true);
+        } else {
+            animator.SetBool("IsRunning",false);
         }
 
         verticalVelocity += gravity * Time.deltaTime;
+        
+        //Nos indica si el personaje esta cayendo
+        animator.SetFloat("VerticalVelocity", verticalVelocity);
 
         //Movimiento relativo a la camara
         Vector3 forward = cameraTransform.forward;
@@ -83,6 +100,14 @@ public class playerController : MonoBehaviour
         if(value.isPressed)
         {
             jumpPressed = true;
+        }
+    }
+
+    public void OnRun(InputValue value)
+    {
+        if(value.isPressed)
+        {
+            runPressed = true;
         }
     }
 
