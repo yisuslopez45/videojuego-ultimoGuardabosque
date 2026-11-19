@@ -4,17 +4,19 @@ using UnityEngine.InputSystem;
 public class playerController : MonoBehaviour
 {
     public float speed = 5f;
+    public float runSpeed = 9f;
+    public float speedDampTime = 0.1f;
     public float gravity = -20f;
-    public float jumpHeight = 3f;
-    public Transform spawnPoint;
+    public float jumpHeight = 1.5f;
     public float respawnHeightOffset = 1.5f;
     public float rotationSpeed = 10f;    
+    public Transform spawnPoint;
 
-    private CharacterController controller;
-    private Vector2 moveInput;
     private float verticalVelocity;
     private bool jumpPressed;   
-    private bool runPressed;
+    private CharacterController controller;
+    private Vector2 moveInput;
+    private InputAction runAction;
     private Animator animator;
 
     Transform cameraTransform;    
@@ -24,6 +26,7 @@ public class playerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         cameraTransform = Camera.main.transform; 
         animator = GetComponentInChildren<Animator>();
+        runAction = GetComponent<PlayerInput>().actions["Run"];
     }
 
     // Update is called once per frame
@@ -31,32 +34,30 @@ public class playerController : MonoBehaviour
     {
 
         bool isGrounded = controller.isGrounded;
-        float speedValue = moveInput.magnitude;
+        
+        //Corre solo mientras Shift esta presionado y hay movimiento
+        bool isRunning = runAction.IsPressed() && moveInput.sqrMagnitude > 0.01f;
+        float currentSpeed = isRunning ? runSpeed : speed;
 
-        animator.SetFloat("Speed", speedValue);
+        //Blend Tree: 0 = reposo, 1 = caminar, 2 = correr
+        float animSpeed = moveInput.magnitude * (isRunning ? 2f : 1f);
+        animator.SetFloat("Speed", animSpeed, speedDampTime, Time.deltaTime);
 
         //Indica si el personaje(modelo) esta en el suelo
         animator.SetBool("IsGrounded", isGrounded);
 
         if(isGrounded && verticalVelocity < 0)
         {
-            verticalVelocity = -3f;
+            verticalVelocity = -2f;
         }
 
         if(jumpPressed && isGrounded)
         {
-            verticalVelocity = Mathf.Sqrt(jumpHeight * -3f * gravity);
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -1.5f * gravity);
             jumpPressed = false;
 
             //Indica al animator que estamos saltando
             animator.SetTrigger("Jump");
-        }
-
-        if(runPressed) {
-            animator.SetTrigger("Run");
-            animator.SetBool("IsRunning",true);
-        } else {
-            animator.SetBool("IsRunning",false);
         }
 
         verticalVelocity += gravity * Time.deltaTime;
@@ -84,9 +85,9 @@ public class playerController : MonoBehaviour
         }
 
         Vector3 move = moveDirection.normalized;
-        move.y = verticalVelocity / speed;
+        move.y = verticalVelocity / currentSpeed;
 
-        controller.Move(move * speed * Time.deltaTime);
+        controller.Move(move * currentSpeed * Time.deltaTime);
     }
 
     public void OnMove(InputValue value)
@@ -100,14 +101,6 @@ public class playerController : MonoBehaviour
         if(value.isPressed)
         {
             jumpPressed = true;
-        }
-    }
-
-    public void OnRun(InputValue value)
-    {
-        if(value.isPressed)
-        {
-            runPressed = true;
         }
     }
 
