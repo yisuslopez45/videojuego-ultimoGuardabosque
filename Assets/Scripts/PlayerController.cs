@@ -53,7 +53,7 @@ public class playerController : MonoBehaviour
 
         if(jumpPressed && isGrounded)
         {
-            verticalVelocity = Mathf.Sqrt(jumpHeight * -1.5f * gravity);
+            verticalVelocity = Mathf.Sqrt(jumpHeight * -2f * gravity);
             jumpPressed = false;
 
             //Indica al animator que estamos saltando

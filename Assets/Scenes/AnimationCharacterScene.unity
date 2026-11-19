@@ -659,7 +659,7 @@ MonoBehaviour:
   runSpeed: 9
   speedDampTime: 0.1
   gravity: -20
-  jumpHeight: 3
+  jumpHeight: 2.25
   respawnHeightOffset: 1.5
   rotationSpeed: 10
   spawnPoint: {fileID: 0}
