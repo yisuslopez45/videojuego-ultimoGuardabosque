@@ -22,6 +22,7 @@ public class playerController : MonoBehaviour
     private InputAction crouchAction;
     private Animator animator;
     private bool isCrouching;
+    private bool isRunning;
     private float standHeight;
     private Vector3 standCenter;
 
@@ -55,7 +56,11 @@ public class playerController : MonoBehaviour
         }
 
         //Corre solo mientras Shift esta presionado, hay movimiento y no esta agachado
-        bool isRunning = !isCrouching && runAction.IsPressed() && moveInput.sqrMagnitude > 0.01f;
+        //Solo se decide en el suelo: en el aire se conserva el estado del despegue
+        if (isGrounded)
+        {
+            isRunning = !isCrouching && runAction.IsPressed() && moveInput.sqrMagnitude > 0.01f;
+        }
         float currentSpeed = isCrouching ? crouchSpeed : (isRunning ? runSpeed : speed);
 
         //Blend Tree: 0 = reposo, 1 = caminar, 2 = correr
