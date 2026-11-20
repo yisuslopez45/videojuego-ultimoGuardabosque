@@ -5,6 +5,8 @@ public class playerController : MonoBehaviour
 {
     public float speed = 5f;
     public float runSpeed = 9f;
+    public float crouchSpeed = 2.5f;
+    public float crouchHeight = 1.3f;
     public float speedDampTime = 0.1f;
     public float gravity = -20f;
     public float jumpHeight = 1.5f;
@@ -17,7 +19,11 @@ public class playerController : MonoBehaviour
     private CharacterController controller;
     private Vector2 moveInput;
     private InputAction runAction;
+    private InputAction crouchAction;
     private Animator animator;
+    private bool isCrouching;
+    private float standHeight;
+    private Vector3 standCenter;
 
     Transform cameraTransform;    
 
@@ -27,6 +33,11 @@ public class playerController : MonoBehaviour
         cameraTransform = Camera.main.transform; 
         animator = GetComponentInChildren<Animator>();
         runAction = GetComponent<PlayerInput>().actions["Run"];
+        crouchAction = GetComponent<PlayerInput>().actions["Crouch"];
+
+        //Medidas de la capsula de pie, para restaurarlas al levantarse
+        standHeight = controller.height;
+        standCenter = controller.center;
     }
 
     // Update is called once per frame
@@ -34,10 +45,18 @@ public class playerController : MonoBehaviour
     {
 
         bool isGrounded = controller.isGrounded;
-        
-        //Corre solo mientras Shift esta presionado y hay movimiento
-        bool isRunning = runAction.IsPressed() && moveInput.sqrMagnitude > 0.01f;
-        float currentSpeed = isRunning ? runSpeed : speed;
+
+        //Agachado solo mientras Control esta presionado
+        //Si hay un techo encima, se mantiene agachado aunque se suelte la tecla
+        bool wantsCrouch = crouchAction.IsPressed();
+        if (wantsCrouch != isCrouching && (wantsCrouch || CanStandUp()))
+        {
+            SetCrouch(wantsCrouch);
+        }
+
+        //Corre solo mientras Shift esta presionado, hay movimiento y no esta agachado
+        bool isRunning = !isCrouching && runAction.IsPressed() && moveInput.sqrMagnitude > 0.01f;
+        float currentSpeed = isCrouching ? crouchSpeed : (isRunning ? runSpeed : speed);
 
         //Blend Tree: 0 = reposo, 1 = caminar, 2 = correr
         float animSpeed = moveInput.magnitude * (isRunning ? 2f : 1f);
@@ -49,6 +68,12 @@ public class playerController : MonoBehaviour
         if(isGrounded && verticalVelocity < 0)
         {
             verticalVelocity = -2f;
+        }
+
+        //No se puede saltar estando agachado
+        if(jumpPressed && isCrouching)
+        {
+            jumpPressed = false;
         }
 
         if(jumpPressed && isGrounded)
@@ -102,6 +127,33 @@ public class playerController : MonoBehaviour
         {
             jumpPressed = true;
         }
+    }
+
+    void SetCrouch(bool crouch)
+    {
+        isCrouching = crouch;
+        animator.SetBool("IsCrouching", crouch);
+
+        //Reduce la capsula manteniendo los pies en el mismo sitio
+        float height = crouch ? crouchHeight : standHeight;
+        float bottom = standCenter.y - standHeight / 2f;
+        controller.height = height;
+        controller.center = new Vector3(standCenter.x, bottom + height / 2f, standCenter.z);
+    }
+
+    bool CanStandUp()
+    {
+        //Comprueba si hay espacio libre sobre la cabeza para la capsula de pie
+        float radius = controller.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.z);
+        Vector3 top = transform.TransformPoint(standCenter + Vector3.up * (standHeight / 2f)) - Vector3.up * radius;
+        foreach (var hit in Physics.OverlapSphere(top, radius * 0.9f, ~0, QueryTriggerInteraction.Ignore))
+        {
+            if (hit != controller && !hit.transform.IsChildOf(transform))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void setSpawnPoint(Transform newSpawnPoint)
