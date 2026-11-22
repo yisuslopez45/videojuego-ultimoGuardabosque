@@ -352,7 +352,7 @@ Transform:
   m_GameObject: {fileID: 687726573}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.25, y: 0.25984, z: -4.94}
+  m_LocalPosition: {x: -7.25, y: -0.06, z: -4.94}
   m_LocalScale: {x: 36.341866, y: 0.66277236, z: 32.39952}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -657,6 +657,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::playerController
   speed: 5
   runSpeed: 9
+  crouchSpeed: 2.5
+  crouchHeight: 1.3
   speedDampTime: 0.1
   gravity: -20
   jumpHeight: 2.25
@@ -927,8 +929,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CamaraController
   target: {fileID: 1193883615}
   distance: 6
-  height: 2
-  rotationSpeed: 5
+  targetOffset: {x: 0, y: 0.5, z: 0}
+  mouseSensitivity: 0.15
+  invertY: 0
+  minPitch: -30
+  maxPitch: 60
+  collisionRadius: 0.25
+  collisionOffset: 0.2
+  minDistance: 0.5
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1735628150
 GameObject:
   m_ObjectHideFlags: 0
