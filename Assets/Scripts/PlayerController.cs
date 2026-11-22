@@ -26,7 +26,17 @@ public class playerController : MonoBehaviour
     private float standHeight;
     private Vector3 standCenter;
 
-    Transform cameraTransform;    
+    Transform cameraTransform;
+
+    //IDs de los parametros del Animator (evita buscar el nombre en cada frame)
+    static readonly int SpeedHash = Animator.StringToHash("Speed");
+    static readonly int IsGroundedHash = Animator.StringToHash("IsGrounded");
+    static readonly int VerticalVelocityHash = Animator.StringToHash("VerticalVelocity");
+    static readonly int JumpHash = Animator.StringToHash("Jump");
+    static readonly int IsCrouchingHash = Animator.StringToHash("IsCrouching");
+
+    //Buffer reutilizable para la comprobacion del techo (sin generar basura)
+    private readonly Collider[] overlapBuffer = new Collider[8];
 
     void Start()
     {
@@ -65,10 +75,10 @@ public class playerController : MonoBehaviour
 
         //Blend Tree: 0 = reposo, 1 = caminar, 2 = correr
         float animSpeed = moveInput.magnitude * (isRunning ? 2f : 1f);
-        animator.SetFloat("Speed", animSpeed, speedDampTime, Time.deltaTime);
+        animator.SetFloat(SpeedHash, animSpeed, speedDampTime, Time.deltaTime);
 
         //Indica si el personaje(modelo) esta en el suelo
-        animator.SetBool("IsGrounded", isGrounded);
+        animator.SetBool(IsGroundedHash, isGrounded);
 
         if(isGrounded && verticalVelocity < 0)
         {
@@ -87,13 +97,13 @@ public class playerController : MonoBehaviour
             jumpPressed = false;
 
             //Indica al animator que estamos saltando
-            animator.SetTrigger("Jump");
+            animator.SetTrigger(JumpHash);
         }
 
         verticalVelocity += gravity * Time.deltaTime;
         
         //Nos indica si el personaje esta cayendo
-        animator.SetFloat("VerticalVelocity", verticalVelocity);
+        animator.SetFloat(VerticalVelocityHash, verticalVelocity);
 
         //Movimiento relativo a la camara
         Vector3 forward = cameraTransform.forward;
@@ -123,7 +133,6 @@ public class playerController : MonoBehaviour
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
-        Debug.Log("OnMove Llamado" + moveInput);
     }
 
     public void OnJump(InputValue value)
@@ -137,7 +146,7 @@ public class playerController : MonoBehaviour
     void SetCrouch(bool crouch)
     {
         isCrouching = crouch;
-        animator.SetBool("IsCrouching", crouch);
+        animator.SetBool(IsCrouchingHash, crouch);
 
         //Reduce la capsula manteniendo los pies en el mismo sitio
         float height = crouch ? crouchHeight : standHeight;
@@ -151,8 +160,10 @@ public class playerController : MonoBehaviour
         //Comprueba si hay espacio libre sobre la cabeza para la capsula de pie
         float radius = controller.radius * Mathf.Max(transform.lossyScale.x, transform.lossyScale.z);
         Vector3 top = transform.TransformPoint(standCenter + Vector3.up * (standHeight / 2f)) - Vector3.up * radius;
-        foreach (var hit in Physics.OverlapSphere(top, radius * 0.9f, ~0, QueryTriggerInteraction.Ignore))
+        int count = Physics.OverlapSphereNonAlloc(top, radius * 0.9f, overlapBuffer, ~0, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
         {
+            Collider hit = overlapBuffer[i];
             if (hit != controller && !hit.transform.IsChildOf(transform))
             {
                 return false;
