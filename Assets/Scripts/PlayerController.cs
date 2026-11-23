@@ -25,6 +25,7 @@ public class playerController : MonoBehaviour
     private bool isRunning;
     private float standHeight;
     private Vector3 standCenter;
+    private Vector3 startPosition;
 
     Transform cameraTransform;
 
@@ -49,6 +50,9 @@ public class playerController : MonoBehaviour
         //Medidas de la capsula de pie, para restaurarlas al levantarse
         standHeight = controller.height;
         standCenter = controller.center;
+
+        //Punto de reaparicion por defecto si la escena no asigna spawnPoint
+        startPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -180,7 +184,9 @@ public class playerController : MonoBehaviour
     public void Die()
     {
         controller.enabled = false;
-        Vector3 respawnPoint = spawnPoint.position + Vector3.up * respawnHeightOffset;
+        Vector3 respawnPoint = spawnPoint != null
+            ? spawnPoint.position + Vector3.up * respawnHeightOffset
+            : startPosition;
         transform.position = respawnPoint;
         verticalVelocity = 0f;
         controller.enabled = true;
