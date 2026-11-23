@@ -104,6 +104,7 @@ InitTestScene*.unity*
 
 # UI Toolkit auto generated files
 /UIElementsSchema/
+Respaldos/
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
