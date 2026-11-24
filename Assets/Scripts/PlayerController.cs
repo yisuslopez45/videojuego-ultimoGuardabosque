@@ -11,8 +11,16 @@ public class playerController : MonoBehaviour
     public float gravity = -20f;
     public float jumpHeight = 1.5f;
     public float respawnHeightOffset = 1.5f;
-    public float rotationSpeed = 10f;    
+    public float rotationSpeed = 10f;
     public Transform spawnPoint;
+
+    [Header("Apuntar")]
+    [Tooltip("Velocidad al moverse mientras se apunta (multiplicador)")]
+    public float aimSpeedMultiplier = 0.55f;
+    public float aimRotationSpeed = 20f;
+
+    //Lo activa WeaponShooter con el clic derecho: el jugador mira hacia donde apunta la camara
+    public bool IsAiming { get; set; }
 
     private float verticalVelocity;
     private bool jumpPressed;   
@@ -26,6 +34,10 @@ public class playerController : MonoBehaviour
     private float standHeight;
     private Vector3 standCenter;
     private Vector3 startPosition;
+    private PlayerEquipment equipment;
+
+    //Mientras esta activo (por ejemplo con el inventario abierto) el jugador no responde al input
+    public bool InputBlocked { get; set; }
 
     Transform cameraTransform;
 
@@ -46,6 +58,7 @@ public class playerController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         runAction = GetComponent<PlayerInput>().actions["Run"];
         crouchAction = GetComponent<PlayerInput>().actions["Crouch"];
+        equipment = GetComponent<PlayerEquipment>();
 
         //Medidas de la capsula de pie, para restaurarlas al levantarse
         standHeight = controller.height;
@@ -61,9 +74,13 @@ public class playerController : MonoBehaviour
 
         bool isGrounded = controller.isGrounded;
 
+        //Con el input bloqueado no hay movimiento ni salto (la gravedad sigue actuando)
+        Vector2 input = InputBlocked ? Vector2.zero : moveInput;
+        if (InputBlocked) jumpPressed = false;
+
         //Agachado solo mientras Control esta presionado
         //Si hay un techo encima, se mantiene agachado aunque se suelte la tecla
-        bool wantsCrouch = crouchAction.IsPressed();
+        bool wantsCrouch = InputBlocked ? isCrouching : crouchAction.IsPressed();
         if (wantsCrouch != isCrouching && (wantsCrouch || CanStandUp()))
         {
             SetCrouch(wantsCrouch);
@@ -73,12 +90,16 @@ public class playerController : MonoBehaviour
         //Solo se decide en el suelo: en el aire se conserva el estado del despegue
         if (isGrounded)
         {
-            isRunning = !isCrouching && runAction.IsPressed() && moveInput.sqrMagnitude > 0.01f;
+            isRunning = !isCrouching && !IsAiming && runAction.IsPressed() && input.sqrMagnitude > 0.01f;
         }
         float currentSpeed = isCrouching ? crouchSpeed : (isRunning ? runSpeed : speed);
+        if (IsAiming) currentSpeed *= aimSpeedMultiplier;
+
+        //Las armas pesadas (por ejemplo el cañon) ralentizan al jugador
+        if (equipment != null) currentSpeed *= equipment.SpeedMultiplier;
 
         //Blend Tree: 0 = reposo, 1 = caminar, 2 = correr
-        float animSpeed = moveInput.magnitude * (isRunning ? 2f : 1f);
+        float animSpeed = input.magnitude * (isRunning ? 2f : 1f);
         animator.SetFloat(SpeedHash, animSpeed, speedDampTime, Time.deltaTime);
 
         //Indica si el personaje(modelo) esta en el suelo
@@ -120,10 +141,15 @@ public class playerController : MonoBehaviour
         forward.Normalize();
         right.Normalize();
 
-        Vector3 moveDirection = forward * moveInput.y + right * moveInput.x;
+        Vector3 moveDirection = forward * input.y + right * input.x;
 
-        //Rotacion del player
-        if(moveDirection.magnitude > 0.1f){
+        //Rotacion del player: al apuntar mira hacia donde mira la camara, si no hacia donde se mueve
+        if (IsAiming)
+        {
+            Quaternion aimRotation = Quaternion.LookRotation(forward);
+            transform.rotation = Quaternion.Slerp(transform.rotation, aimRotation, aimRotationSpeed * Time.deltaTime);
+        }
+        else if(moveDirection.magnitude > 0.1f){
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
