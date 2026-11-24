@@ -1,5 +1,76 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1265910550277987051
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1347039032407651831}
+  - component: {fileID: 7773854840666092063}
+  - component: {fileID: 2797481576823389772}
+  m_Layer: 0
+  m_Name: InventarioUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1347039032407651831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265910550277987051}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4935424751744735024}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7773854840666092063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265910550277987051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: bce5045c0c8c2defc9ab452024029ac4, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 721fe4625349b9d96b10bf5f36e9136a, type: 3}
+  m_SortingOrder: 10
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &2797481576823389772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1265910550277987051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c596e7a62862c8b4d86600650a03258e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryUI
+  equipment: {fileID: 7434559234791241554}
+  player: {fileID: 6362589169943891843}
+  cameraController: {fileID: 1011712517822085231}
 --- !u!1 &4211805703948541810
 GameObject:
   m_ObjectHideFlags: 0
@@ -12,6 +83,9 @@ GameObject:
   - component: {fileID: 2228557524757502818}
   - component: {fileID: 6523357709025053371}
   - component: {fileID: 6362589169943891843}
+  - component: {fileID: 7434559234791241554}
+  - component: {fileID: 1305001919745508126}
+  - component: {fileID: 6318180121314311311}
   m_Layer: 0
   m_Name: GuardabosquePlayer
   m_TagString: Untagged
@@ -112,6 +186,78 @@ MonoBehaviour:
   respawnHeightOffset: 1.5
   rotationSpeed: 10
   spawnPoint: {fileID: 0}
+  aimSpeedMultiplier: 0.55
+  aimRotationSpeed: 20
+--- !u!114 &7434559234791241554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4211805703948541810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91595283080689eaca8076dd49f15d6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerEquipment
+  inventory:
+  - {fileID: 11400000, guid: 5b5457956fd3f99548f640a71f4a4adc, type: 2}
+  - {fileID: 11400000, guid: a181f051756e3155d9f73507f84b3823, type: 2}
+  - {fileID: 11400000, guid: 06b2828f0e4d9c2b3bab5be89ad9769d, type: 2}
+  - {fileID: 11400000, guid: 71bf750eaf625f647a18f6c20e70103b, type: 2}
+  - {fileID: 11400000, guid: 596b14d5cc2fb69df90019c25351aa86, type: 2}
+  - {fileID: 11400000, guid: 0248697accaf2e5228851e5188efb9b5, type: 2}
+  - {fileID: 11400000, guid: cfb6a76d409a41eb3933710519ed9283, type: 2}
+  - {fileID: 11400000, guid: 6866beeaf339d65bbbe420c6b1847387, type: 2}
+  - {fileID: 11400000, guid: db83fa1f5929b1a7f8c2e19b9241e81a, type: 2}
+  - {fileID: 11400000, guid: 737968c6609c1ad35b4c0905e07e5a83, type: 2}
+  startingWeapon: {fileID: 0}
+  startingAccessories: []
+--- !u!114 &1305001919745508126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4211805703948541810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0a581d1d8ba4349f9331fdb71ca0270, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponShooter
+  equipment: {fileID: 7434559234791241554}
+  weaponAnimator: {fileID: 6318180121314311311}
+  player: {fileID: 6362589169943891843}
+  cameraController: {fileID: 1011712517822085231}
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  muzzleFlashPrefab: {fileID: 3679962308437315360, guid: d2591aa3632ddc729bcfcb99b94ae787, type: 3}
+  impactPrefab: {fileID: 3585134346931632113, guid: a74a2f3e71c032d0888ff42ac29b964c, type: 3}
+  explosionPrefab: {fileID: 6045222437539830226, guid: 74124b42b0bf3abdd8660ae2c0b2a856, type: 3}
+  tracerMaterial: {fileID: 2100000, guid: 12319824975bf115297bd5297680411a, type: 2}
+  tracerDuration: 0.06
+  hipFireLookTime: 0.6
+--- !u!114 &6318180121314311311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4211805703948541810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27a4eece09779a739b22c2a74be9286c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponAnimator
+  equipment: {fileID: 7434559234791241554}
+  baseReposo: {fileID: 7400000, guid: 3d083782c5f55184ebfaade3ab85e3f0, type: 2}
+  baseCaminar: {fileID: 7400000, guid: bd1c762730bff6cdcb98f494b39c7339, type: 2}
+  baseApuntar: {fileID: 7400000, guid: 31e0d0e134741a24db159c73aa9c8f68, type: 2}
+  baseDisparar: {fileID: 7400000, guid: 533b9547b895a2b88a4fa581c4367c90, type: 2}
+  baseRecargar: {fileID: 7400000, guid: 42979b00447baff7aaf64fd77b5f9d0d, type: 2}
+  layerBlendSpeed: 6
+  spinePitchWeight: 0.8
 --- !u!1 &5425735496059902266
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,12 +415,89 @@ MonoBehaviour:
   invertY: 0
   minPitch: -30
   maxPitch: 60
+  aimDistance: 2.2
+  aimShoulderOffset: {x: 0.6, y: 0.15, z: 0}
+  aimBlendSpeed: 8
   collisionRadius: 0.25
   collisionOffset: 0.2
   minDistance: 0.5
   collisionMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  recoilRecovery: 8
+--- !u!1 &6038738434123979934
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 683352012508809610}
+  - component: {fileID: 6203520858998530730}
+  - component: {fileID: 5976699509321989572}
+  m_Layer: 0
+  m_Name: HudUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &683352012508809610
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038738434123979934}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4935424751744735024}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6203520858998530730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038738434123979934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: bce5045c0c8c2defc9ab452024029ac4, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 3bff31b1f323e998abc5ab6a61013fe5, type: 3}
+  m_SortingOrder: 0
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &5976699509321989572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6038738434123979934}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49f5d536d0f989461a7369913c736375, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HudUI
+  shooter: {fileID: 1305001919745508126}
+  equipment: {fileID: 7434559234791241554}
+  inventory: {fileID: 2797481576823389772}
+  crosshairPixelsPerDegree: 6
+  crosshairMinGap: 5
 --- !u!1 &8110333342708488316
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +529,8 @@ Transform:
   m_Children:
   - {fileID: 5417590038609864941}
   - {fileID: 1565459081996137458}
+  - {fileID: 1347039032407651831}
+  - {fileID: 683352012508809610}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4703551010016229412
