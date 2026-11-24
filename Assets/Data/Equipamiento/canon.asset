@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72324d8e449f1e99e818687411d41a17, type: 3}
+  m_Name: canon
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  displayName: "Ca\xF1\xF3n"
+  type: 0
+  slot: 0
+  icon: {fileID: 21300000, guid: 053b4cf7f0729ea468de43bca6a3fe21, type: 3}
+  prefab: {fileID: 1615968755472490803, guid: 44e94991dac8102b3a954037c22689da, type: 3}
+  positionOffset: {x: -0.0000000055703038, y: 0.12081086, z: -0.24000005}
+  rotationOffset: {x: 270, y: 180, z: 0}
+  twoHanded: 1
+  moveSpeedMultiplier: 0.7
+  damage: 120
+  range: 60
+  fireRate: 0.4
+  magazineSize: 1
+  startingReserve: 6
+  reloadTime: 3
+  hipSpread: 6
+  aimSpread: 2
+  impactForce: 25
+  explosionRadius: 4
+  aimFov: 50
+  recoil: 7
+  animReposo: {fileID: 7400000, guid: 27d02b849b1b250bc9818dc68d398685, type: 2}
+  animCaminar: {fileID: 7400000, guid: 21905ca9a97da4221922ae61b5e43c13, type: 2}
+  animApuntar: {fileID: 7400000, guid: 6878d748ac74f1649986b6576bcff5e0, type: 2}
+  animDisparar: {fileID: 7400000, guid: fafbaf3d4906a625288ced067d2e82d8, type: 2}
+  animRecargar: {fileID: 7400000, guid: 242d450cfd051d128bbba81d90e25027, type: 2}
+  aimChestRotation: {x: 5.444097, y: 35.133945, z: 1.989976}
