@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4028952967245832}
   - component: {fileID: 33489585399579916}
   - component: {fileID: 23287288138857344}
+  - component: {fileID: 3553070268486930606}
   m_Layer: 0
   m_Name: Summer Round Tree 2
   m_TagString: Untagged
@@ -91,3 +92,26 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &3553070268486930606
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328428547892066}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.004083605
+  m_Height: 0.04116347
+  m_Direction: 1
+  m_Center: {x: 0.0002586675, y: 0.019858731, z: -0.0010258956}
