@@ -1,0 +1,98 @@
+.hud {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Mira: centrada; los cuatro trazos se separan segun la dispersion del arma (lo ajusta HudUI.cs) */
+.crosshair {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+}
+
+.ch-line {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0, 0, 0, 0.6);
+    border-width: 1px;
+}
+
+.ch-vertical {
+    width: 4px;
+    height: 12px;
+    left: -2px;
+}
+
+.ch-horizontal {
+    width: 12px;
+    height: 4px;
+    top: -2px;
+}
+
+.ch-dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    left: -2px;
+    top: -2px;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.ammo-panel {
+    position: absolute;
+    right: 40px;
+    bottom: 36px;
+    align-items: flex-end;
+    padding: 10px 18px;
+    background-color: rgba(28, 38, 30, 0.75);
+    border-width: 2px;
+    border-color: rgb(122, 84, 52);
+    border-radius: 8px;
+}
+
+.weapon-name {
+    font-size: 18px;
+    color: rgb(236, 228, 210);
+    -unity-font-style: bold;
+}
+
+.ammo-row {
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.ammo-mag {
+    font-size: 40px;
+    color: rgb(236, 228, 210);
+    -unity-font-style: bold;
+}
+
+.ammo-mag--empty {
+    color: rgb(230, 90, 70);
+}
+
+.ammo-reserve {
+    font-size: 22px;
+    color: rgb(176, 168, 150);
+    margin-bottom: 6px;
+    margin-left: 4px;
+}
+
+.reload {
+    font-size: 15px;
+    color: rgb(222, 180, 82);
+}
+
+.controls-hint {
+    position: absolute;
+    left: 40px;
+    bottom: 36px;
+    font-size: 14px;
+    color: rgba(236, 228, 210, 0.7);
+}
