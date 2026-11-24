@@ -17,6 +17,12 @@ public class CamaraController : MonoBehaviour
     public float minPitch = -30f;
     public float maxPitch = 60f;
 
+    [Header("Apuntar (clic derecho con un arma)")]
+    public float aimDistance = 2.2f;
+    //Desplazamiento lateral para mirar por encima del hombro derecho
+    public Vector3 aimShoulderOffset = new Vector3(0.6f, 0.15f, 0f);
+    public float aimBlendSpeed = 8f;
+
     [Header("Colision")]
     public float collisionRadius = 0.25f;
     public float collisionOffset = 0.2f;
@@ -26,17 +32,58 @@ public class CamaraController : MonoBehaviour
     private float yaw;
     private float pitch = 18f;
 
+    //Modo apuntar: lo activa WeaponShooter
+    public bool IsAiming { get; set; }
+    public float AimFov { get; set; } = 45f;
+    public float Yaw => yaw + recoilYaw;
+    public float Pitch => pitch - recoilPitch;
+    private float aimBlend;
+    private float normalFov;
+    private Camera cam;
+
+    [Header("Retroceso")]
+    [Tooltip("Velocidad con la que la camara vuelve a su sitio tras el retroceso")]
+    public float recoilRecovery = 8f;
+    private float recoilPitch;
+    private float recoilYaw;
+
+    //Retroceso del arma: sube la camara y la desvia un poco hacia los lados; luego se recupera sola
+    public void AddRecoil(float degrees)
+    {
+        recoilPitch += degrees;
+        recoilYaw += Random.Range(-degrees, degrees) * 0.3f;
+    }
+
+    //Mientras esta activo (por ejemplo con el inventario abierto) la camara no gira ni toca el cursor.
+    //Se recuerda el frame en que se desbloquea para que el Esc que cierra el inventario
+    //no libere tambien el cursor en ese mismo frame.
+    private bool inputBlocked;
+    private int unblockedFrame = -1;
+    public bool InputBlocked
+    {
+        get => inputBlocked;
+        set
+        {
+            if (inputBlocked && !value) unblockedFrame = Time.frameCount;
+            inputBlocked = value;
+        }
+    }
+
     //Buffer reutilizable para la colision (evita crear un array nuevo cada frame)
     private readonly RaycastHit[] hitBuffer = new RaycastHit[8];
 
     void Start()
     {
         yaw = transform.eulerAngles.y;
+        cam = GetComponent<Camera>();
+        normalFov = cam.fieldOfView;
         LockCursor(true);
     }
 
     void Update()
     {
+        if (inputBlocked || Time.frameCount == unblockedFrame) return;
+
         //Esc libera el cursor, clic izquierdo lo vuelve a bloquear
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
         {
@@ -60,13 +107,28 @@ public class CamaraController : MonoBehaviour
     {
         if (target == null) return;
 
-        Vector3 pivot = target.position + targetOffset;
-        Quaternion rotation = Quaternion.Euler(pitch, yaw, 0f);
+        //Transicion suave entre la camara normal y la de apuntar
+        aimBlend = Mathf.MoveTowards(aimBlend, IsAiming ? 1f : 0f, aimBlendSpeed * Time.deltaTime);
+        float blend = Mathf.SmoothStep(0f, 1f, aimBlend);
+        cam.fieldOfView = Mathf.Lerp(normalFov, AimFov, blend);
+
+        //El retroceso se recupera poco a poco
+        float decay = 1f - Mathf.Exp(-recoilRecovery * Time.deltaTime);
+        recoilPitch = Mathf.Lerp(recoilPitch, 0f, decay);
+        recoilYaw = Mathf.Lerp(recoilYaw, 0f, decay);
+
+        Quaternion rotation = Quaternion.Euler(Pitch, Yaw, 0f);
+        Vector3 shoulder = Quaternion.Euler(0f, Yaw, 0f) * aimShoulderOffset * blend;
+        Vector3 pivot = target.position + targetOffset + shoulder;
         Vector3 direction = rotation * Vector3.back;
 
+        //Con mucho zoom (FOV pequeño) la camara se aleja en proporcion para que el personaje no tape la vista
+        float zoomCompensation = Mathf.Tan(normalFov * 0.5f * Mathf.Deg2Rad) / Mathf.Tan(Mathf.Max(AimFov, 5f) * 0.5f * Mathf.Deg2Rad);
+        float wantedDistance = Mathf.Lerp(distance, aimDistance * zoomCompensation, blend);
+
         //Si algo se interpone entre el jugador y la camara, la camara se acerca
-        float currentDistance = distance;
-        int count = Physics.SphereCastNonAlloc(pivot, collisionRadius, direction, hitBuffer, distance, collisionMask, QueryTriggerInteraction.Ignore);
+        float currentDistance = wantedDistance;
+        int count = Physics.SphereCastNonAlloc(pivot, collisionRadius, direction, hitBuffer, wantedDistance, collisionMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < count; i++)
         {
             RaycastHit hit = hitBuffer[i];
