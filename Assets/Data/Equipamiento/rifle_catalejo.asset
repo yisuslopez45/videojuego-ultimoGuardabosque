@@ -16,13 +16,14 @@ MonoBehaviour:
   type: 0
   slot: 0
   icon: {fileID: 21300000, guid: b8e6741688f94bd70aaab63674e1f688, type: 3}
+  wheelIcon: {fileID: 21300000, guid: e4b71462921272827aaee430991ec575, type: 3}
   prefab: {fileID: 8761176714534318530, guid: 926b4f155ecb90767b43ca9db11f5c4f, type: 3}
   positionOffset: {x: -0.000000020601874, y: 0.06081075, z: 0.00000009181472}
   rotationOffset: {x: 305, y: 89.999954, z: 180.00002}
   twoHanded: 1
   moveSpeedMultiplier: 0.9
   damage: 60
-  range: 150
+  range: 300
   fireRate: 1.2
   magazineSize: 5
   startingReserve: 25
@@ -31,8 +32,18 @@ MonoBehaviour:
   aimSpread: 0.15
   impactForce: 10
   explosionRadius: 0
-  aimFov: 22
+  aimFov: 40
   recoil: 3
+  shotSound: {fileID: 8300000, guid: c3cfb52da4a986f4a916abfeb9d1ea6c, type: 3}
+  reloadSound: {fileID: 8300000, guid: 1146102e7e7b2d693af53832a3fa3fe1, type: 3}
+  reloadSoundDelay: 0
+  hasScope: 1
+  scopeFov: 10
+  scopeMinFov: 5
+  scopeMaxFov: 16
+  scopeDelay: 0.2
+  scopeSpread: 0
+  scopeSway: 0.35
   animReposo: {fileID: 7400000, guid: 3d083782c5f55184ebfaade3ab85e3f0, type: 2}
   animCaminar: {fileID: 7400000, guid: bd1c762730bff6cdcb98f494b39c7339, type: 2}
   animApuntar: {fileID: 7400000, guid: 31e0d0e134741a24db159c73aa9c8f68, type: 2}

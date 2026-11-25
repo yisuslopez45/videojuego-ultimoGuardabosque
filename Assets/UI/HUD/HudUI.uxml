@@ -1,6 +1,20 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <Style src="HudUI.uss" />
     <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
+        <!-- Mira del catalejo: el circulo y la reticula (ScopeOverlay) los inserta HudUI.cs aqui -->
+        <ui:VisualElement name="scope-layer" class="scope-layer" picking-mode="Ignore">
+            <ui:VisualElement name="scope-info" class="scope-info" picking-mode="Ignore">
+                <ui:Label name="scope-zoom" text="6.0x" class="scope-zoom" picking-mode="Ignore" />
+                <ui:VisualElement class="scope-breath" picking-mode="Ignore">
+                    <ui:Label text="Respiración" class="scope-breath-label" picking-mode="Ignore" />
+                    <ui:VisualElement class="scope-breath-track" picking-mode="Ignore">
+                        <ui:VisualElement name="scope-breath-fill" class="scope-breath-fill" picking-mode="Ignore" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Label text="Shift: contener la respiración" class="scope-hint" picking-mode="Ignore" />
+                <ui:Label text="Rueda del ratón: zoom" class="scope-hint scope-hint--next" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:VisualElement name="crosshair" class="crosshair" picking-mode="Ignore">
             <ui:VisualElement name="ch-top" class="ch-line ch-vertical" picking-mode="Ignore" />
             <ui:VisualElement name="ch-bottom" class="ch-line ch-vertical" picking-mode="Ignore" />
@@ -16,6 +30,11 @@
             </ui:VisualElement>
             <ui:Label name="reload" text="Recargando..." class="reload" picking-mode="Ignore" />
         </ui:VisualElement>
-        <ui:Label name="controls-hint" text="Clic der.: apuntar   ·   Clic izq.: disparar   ·   R: recargar   ·   Tab: inventario" class="controls-hint" picking-mode="Ignore" />
+        <ui:VisualElement name="stamina" class="stamina" picking-mode="Ignore">
+            <ui:VisualElement class="stamina-track" picking-mode="Ignore">
+                <ui:VisualElement name="stamina-fill" class="stamina-fill" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label name="controls-hint" text="Clic der.: apuntar   ·   Clic izq.: disparar   ·   R: recargar   ·   Tab: armas   ·   I: accesorios" class="controls-hint" picking-mode="Ignore" />
     </ui:VisualElement>
 </ui:UXML>

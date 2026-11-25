@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="WeaponWheelUI.uss" />
+    <ui:VisualElement name="wheel-overlay" class="wheel-overlay">
+        <ui:VisualElement name="wheel-area" class="wheel-area">
+            <!-- El anillo (WeaponWheelRing) lo inserta WeaponWheelUI.cs como primer hijo -->
+            <ui:VisualElement name="wheel-slots" class="wheel-slots" />
+            <ui:VisualElement name="wheel-info" class="wheel-info">
+                <ui:Label name="info-name" text="Rifle con catalejo" class="info-name" />
+                <ui:VisualElement class="info-ammo">
+                    <ui:Label name="info-mag" text="5" class="info-mag" />
+                    <ui:Label name="info-reserve" text="/ 25" class="info-reserve" />
+                </ui:VisualElement>
+                <ui:VisualElement name="info-stats" class="info-stats">
+                    <ui:VisualElement class="stat-row">
+                        <ui:Label text="Daño" class="stat-label" />
+                        <ui:VisualElement class="stat-track"><ui:VisualElement name="bar-damage" class="stat-fill" /></ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="stat-row">
+                        <ui:Label text="Alcance" class="stat-label" />
+                        <ui:VisualElement class="stat-track"><ui:VisualElement name="bar-range" class="stat-fill" /></ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement class="stat-row">
+                        <ui:Label text="Cadencia" class="stat-label" />
+                        <ui:VisualElement class="stat-track"><ui:VisualElement name="bar-firerate" class="stat-fill" /></ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:Label name="info-state" text="EN MANO" class="info-state" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Label text="Elige con el ratón · Clic o suelta Tab para equipar · Esc: cancelar · I: accesorios" class="wheel-hint" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -71,6 +71,83 @@ MonoBehaviour:
   equipment: {fileID: 7434559234791241554}
   player: {fileID: 6362589169943891843}
   cameraController: {fileID: 1011712517822085231}
+  weaponWheel: {fileID: 2912822212210810561}
+--- !u!1 &2030554200800288771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8148897648523863764}
+  - component: {fileID: 6938843369450220981}
+  - component: {fileID: 2912822212210810561}
+  m_Layer: 0
+  m_Name: RuedaArmasUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8148897648523863764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030554200800288771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4935424751744735024}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6938843369450220981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030554200800288771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.UIDocument
+  m_PanelSettings: {fileID: 11400000, guid: bce5045c0c8c2defc9ab452024029ac4, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: 3a9889cd429796104815e5c7e91247ff, type: 3}
+  m_SortingOrder: 5
+  m_Position: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+  m_PivotReferenceSize: 0
+  m_Pivot: 0
+  m_WorldSpaceCollider: {fileID: 0}
+--- !u!114 &2912822212210810561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030554200800288771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47332ae75866311d18b15f1c28c54eb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponWheelUI
+  equipment: {fileID: 7434559234791241554}
+  shooter: {fileID: 1305001919745508126}
+  player: {fileID: 6362589169943891843}
+  cameraController: {fileID: 1011712517822085231}
+  inventory: {fileID: 2797481576823389772}
+  outerRadius: 300
+  innerRadius: 150
+  slowMotion: 0.3
 --- !u!1 &4211805703948541810
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,6 +163,7 @@ GameObject:
   - component: {fileID: 7434559234791241554}
   - component: {fileID: 1305001919745508126}
   - component: {fileID: 6318180121314311311}
+  - component: {fileID: 2801941727599079203}
   m_Layer: 0
   m_Name: GuardabosquePlayer
   m_TagString: Untagged
@@ -188,6 +266,10 @@ MonoBehaviour:
   spawnPoint: {fileID: 0}
   aimSpeedMultiplier: 0.55
   aimRotationSpeed: 20
+  maxRunTime: 4.2
+  staminaRecoverTime: 5
+  staminaRecoverDelay: 0.8
+  staminaToRunAgain: 0.35
 --- !u!114 &7434559234791241554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,6 +320,12 @@ MonoBehaviour:
   tracerMaterial: {fileID: 2100000, guid: 12319824975bf115297bd5297680411a, type: 2}
   tracerDuration: 0.06
   hipFireLookTime: 0.6
+  shotVolume: 1
+  reloadVolume: 0.8
+  shotPitchVariation: 0.06
+  scopeZoomStep: 2.5
+  breathHoldTime: 3
+  breathRecoverTime: 4
 --- !u!114 &6318180121314311311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,6 +346,36 @@ MonoBehaviour:
   baseRecargar: {fileID: 7400000, guid: 42979b00447baff7aaf64fd77b5f9d0d, type: 2}
   layerBlendSpeed: 6
   spinePitchWeight: 0.8
+--- !u!114 &2801941727599079203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4211805703948541810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 378263b26b29752b29089499c3d849f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAudio
+  player: {fileID: 6362589169943891843}
+  shooter: {fileID: 1305001919745508126}
+  stepSound: {fileID: 8300000, guid: 3edff26199827aad79fdc977bd6bfe24, type: 3}
+  runSound: {fileID: 8300000, guid: 4e085894c23fdd320aa75468ed1d8c37, type: 3}
+  walkVolume: 0.35
+  runVolume: 0.5
+  crouchVolume: 0.18
+  landVolume: 0.55
+  stepPitchVariation: 0.07
+  walkContacts: {x: 0.43, y: 0.93}
+  crouchContacts: {x: 0, y: 0.5}
+  breathFastSound: {fileID: 8300000, guid: fcd6dae6aff3d39d58f0faf73e3585da, type: 3}
+  breathInSound: {fileID: 8300000, guid: 2909e98a498ac689bbb4cbf94e4d410f, type: 3}
+  breathOutSound: {fileID: 8300000, guid: 470d25ca265e7815abd9b1c29efdefa7, type: 3}
+  breathFastVolume: 0.5
+  aimBreathVolume: 0.45
+  breathFastStopAt: 0.7
+  breathFastFade: 1.2
 --- !u!1 &5425735496059902266
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +542,7 @@ MonoBehaviour:
   collisionMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  scopeEyeOffset: {x: 0, y: 0.06, z: 0.12}
   recoilRecovery: 8
 --- !u!1 &6038738434123979934
 GameObject:
@@ -496,6 +615,7 @@ MonoBehaviour:
   shooter: {fileID: 1305001919745508126}
   equipment: {fileID: 7434559234791241554}
   inventory: {fileID: 2797481576823389772}
+  weaponWheel: {fileID: 2912822212210810561}
   crosshairPixelsPerDegree: 6
   crosshairMinGap: 5
 --- !u!1 &8110333342708488316
@@ -531,6 +651,7 @@ Transform:
   - {fileID: 1565459081996137458}
   - {fileID: 1347039032407651831}
   - {fileID: 683352012508809610}
+  - {fileID: 8148897648523863764}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4703551010016229412

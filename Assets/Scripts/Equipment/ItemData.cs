@@ -25,6 +25,8 @@ public class ItemData : ScriptableObject
     public ItemType type;
     public EquipSlot slot;
     public Sprite icon;
+    [Tooltip("Icono de perfil para la rueda de armas (si esta vacio se usa 'icon')")]
+    public Sprite wheelIcon;
     public GameObject prefab;
 
     [Header("Colocacion respecto al hueso del slot")]
@@ -56,6 +58,29 @@ public class ItemData : ScriptableObject
     public float aimFov = 45f;
     [Tooltip("Retroceso: grados que sube la camara en cada disparo")]
     public float recoil = 2f;
+
+    [Header("Sonidos")]
+    public AudioClip shotSound;
+    [Tooltip("Volumen del disparo de esta arma (1 = original; mas de 1 lo amplifica, demasiado puede distorsionar)")]
+    [Range(0f, 4f)] public float shotVolume = 1f;
+    public AudioClip reloadSound;
+    [Tooltip("Segundos desde que empieza la recarga hasta que suena (para que coincida con la animacion)")]
+    public float reloadSoundDelay = 0f;
+
+    [Header("Mira telescopica (armas de largo alcance)")]
+    [Tooltip("Al apuntar se mira por el catalejo: la mira ocupa toda la pantalla")]
+    public bool hasScope;
+    [Tooltip("Campo de vision al entrar en la mira (menor = mas aumentos)")]
+    public float scopeFov = 10f;
+    [Tooltip("Limites de zoom con la rueda del raton")]
+    public float scopeMinFov = 5f;
+    public float scopeMaxFov = 16f;
+    [Tooltip("Segundos apuntando antes de mirar por el catalejo")]
+    public float scopeDelay = 0.2f;
+    [Tooltip("Dispersion en grados mirando por el catalejo")]
+    public float scopeSpread = 0f;
+    [Tooltip("Balanceo del pulso en grados (Shift lo reduce mientras dura la respiracion)")]
+    public float scopeSway = 0.35f;
 
     [Header("Animaciones (solo armas)")]
     public AnimationClip animReposo;

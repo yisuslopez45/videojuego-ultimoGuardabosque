@@ -4,13 +4,16 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Cursor = UnityEngine.Cursor;
 
-//Inventario del jugador: se abre con Tab y permite elegir arma y ponerse o quitarse accesorios
+//Inventario del jugador: se abre con I y permite ponerse o quitarse accesorios (y tambien elegir arma).
+//Para cambiar de arma rapido esta la rueda de armas (mantener Tab).
 [RequireComponent(typeof(UIDocument))]
 public class InventoryUI : MonoBehaviour
 {
     public PlayerEquipment equipment;
     public playerController player;
     public CamaraController cameraController;
+    [Tooltip("Rueda de armas: el inventario no se abre mientras esta abierta")]
+    public WeaponWheelUI weaponWheel;
 
     public bool IsOpen { get; private set; }
 
@@ -19,7 +22,7 @@ public class InventoryUI : MonoBehaviour
     private Button tabWeapons;
     private Button tabAccessories;
     private Label currentWeaponLabel;
-    private bool showingWeapons = true;
+    private bool showingWeapons = false;
     private InputAction inventoryAction;
 
     void OnEnable()
@@ -36,7 +39,7 @@ public class InventoryUI : MonoBehaviour
         overlay.style.display = DisplayStyle.None;
 
         if (equipment != null) equipment.OnEquipmentChanged += Refresh;
-        if (player != null) inventoryAction = player.GetComponent<PlayerInput>().actions["Inventory"];
+        if (player != null) inventoryAction = player.GetComponent<PlayerInput>().actions["Accessories"];
     }
 
     void OnDisable()
@@ -48,7 +51,8 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
-        if (inventoryAction != null && inventoryAction.WasPressedThisFrame())
+        bool wheelOpen = weaponWheel != null && weaponWheel.IsOpen;
+        if (inventoryAction != null && inventoryAction.WasPressedThisFrame() && !wheelOpen)
         {
             Toggle();
         }
