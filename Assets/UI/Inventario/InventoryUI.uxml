@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="InventoryUI.uss" />
+    <ui:VisualElement name="overlay" class="overlay">
+        <ui:VisualElement name="panel" class="panel">
+            <ui:VisualElement class="header">
+                <ui:Label text="Inventario" class="title" />
+                <ui:VisualElement class="tabs">
+                    <ui:Button name="tab-weapons" text="Armas" class="tab tab--active" />
+                    <ui:Button name="tab-accessories" text="Accesorios" class="tab" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:ScrollView name="scroll" class="scroll">
+                <ui:VisualElement name="grid" class="grid" />
+            </ui:ScrollView>
+            <ui:VisualElement class="footer">
+                <ui:Label name="current-weapon" text="Arma actual: ninguna" class="footer-text" />
+                <ui:Label text="Tab / Esc: cerrar" class="footer-hint" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

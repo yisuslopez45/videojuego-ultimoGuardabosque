@@ -1,0 +1,21 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="HudUI.uss" />
+    <ui:VisualElement name="hud" class="hud" picking-mode="Ignore">
+        <ui:VisualElement name="crosshair" class="crosshair" picking-mode="Ignore">
+            <ui:VisualElement name="ch-top" class="ch-line ch-vertical" picking-mode="Ignore" />
+            <ui:VisualElement name="ch-bottom" class="ch-line ch-vertical" picking-mode="Ignore" />
+            <ui:VisualElement name="ch-left" class="ch-line ch-horizontal" picking-mode="Ignore" />
+            <ui:VisualElement name="ch-right" class="ch-line ch-horizontal" picking-mode="Ignore" />
+            <ui:VisualElement name="ch-dot" class="ch-dot" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement name="ammo-panel" class="ammo-panel" picking-mode="Ignore">
+            <ui:Label name="weapon-name" text="Arma" class="weapon-name" picking-mode="Ignore" />
+            <ui:VisualElement class="ammo-row" picking-mode="Ignore">
+                <ui:Label name="ammo-mag" text="6" class="ammo-mag" picking-mode="Ignore" />
+                <ui:Label name="ammo-reserve" text="/ 30" class="ammo-reserve" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:Label name="reload" text="Recargando..." class="reload" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:Label name="controls-hint" text="Clic der.: apuntar   ·   Clic izq.: disparar   ·   R: recargar   ·   Tab: inventario" class="controls-hint" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>
