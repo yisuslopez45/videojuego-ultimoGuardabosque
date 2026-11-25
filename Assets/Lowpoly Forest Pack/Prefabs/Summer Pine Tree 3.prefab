@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4864519935652256}
   - component: {fileID: 33457097851520404}
   - component: {fileID: 23413570330421316}
+  - component: {fileID: 7787406492246239352}
   m_Layer: 0
   m_Name: Summer Pine Tree 3
   m_TagString: Untagged
@@ -91,3 +92,26 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &7787406492246239352
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486868103902064}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.004083604
+  m_Height: 0.10213944
+  m_Direction: 1
+  m_Center: {x: -0.0000758281, y: 0.050346717, z: 0.00034878764}
