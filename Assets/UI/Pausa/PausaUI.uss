@@ -1,0 +1,71 @@
+/* Misma paleta de bosque que el inventario */
+:root {
+    --verde-oscuro: rgb(28, 38, 30);
+    --verde: rgb(46, 62, 48);
+    --verde-claro: rgb(70, 92, 70);
+    --madera: rgb(122, 84, 52);
+    --dorado: rgb(222, 180, 82);
+    --texto: rgb(236, 228, 210);
+    --texto-suave: rgb(176, 168, 150);
+}
+
+.overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.panel {
+    width: 380px;
+    align-items: stretch;
+    background-color: var(--verde-oscuro);
+    border-width: 3px;
+    border-color: var(--madera);
+    border-radius: 12px;
+    padding: 24px 32px;
+}
+
+.title {
+    font-size: 40px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: var(--texto);
+    margin-bottom: 20px;
+}
+
+.boton {
+    height: 52px;
+    margin: 6px 0;
+    font-size: 20px;
+    color: var(--texto);
+    background-color: var(--verde);
+    border-width: 2px;
+    border-color: var(--verde-claro);
+    border-radius: 8px;
+}
+
+.boton:hover {
+    background-color: var(--verde-claro);
+    border-color: var(--dorado);
+}
+
+.boton:active {
+    background-color: var(--madera);
+}
+
+.boton--principal {
+    border-color: var(--dorado);
+    -unity-font-style: bold;
+}
+
+.hint {
+    margin-top: 14px;
+    font-size: 14px;
+    -unity-text-align: middle-center;
+    color: var(--texto-suave);
+}

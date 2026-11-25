@@ -24,6 +24,8 @@ public class WeaponWheelUI : MonoBehaviour
     [Range(0.05f, 1f)] public float slowMotion = 0.3f;
 
     public bool IsOpen { get; private set; }
+    //Frame en que se cerro: el menu de pausa lo usa para no abrirse con el mismo Esc
+    public int ClosedFrame { get; private set; } = -1;
 
     private VisualElement overlay;
     private VisualElement wheelArea;
@@ -89,7 +91,7 @@ public class WeaponWheelUI : MonoBehaviour
 
     void Update()
     {
-        if (wheelAction == null || equipment == null) return;
+        if (wheelAction == null || equipment == null || PausaUI.IsPaused) return;
 
         if (!IsOpen)
         {
@@ -143,6 +145,7 @@ public class WeaponWheelUI : MonoBehaviour
     {
         if (!IsOpen) return;
         IsOpen = false;
+        ClosedFrame = Time.frameCount;
         if (equipSelected) EquipSelected();
 
         overlay.RemoveFromClassList("wheel-overlay--open");

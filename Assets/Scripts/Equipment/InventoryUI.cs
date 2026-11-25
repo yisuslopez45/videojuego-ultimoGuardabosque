@@ -16,6 +16,8 @@ public class InventoryUI : MonoBehaviour
     public WeaponWheelUI weaponWheel;
 
     public bool IsOpen { get; private set; }
+    //Frame en que se cerro: el menu de pausa lo usa para no abrirse con el mismo Esc
+    public int ClosedFrame { get; private set; } = -1;
 
     private VisualElement overlay;
     private VisualElement grid;
@@ -51,6 +53,8 @@ public class InventoryUI : MonoBehaviour
 
     void Update()
     {
+        if (PausaUI.IsPaused) return;
+
         bool wheelOpen = weaponWheel != null && weaponWheel.IsOpen;
         if (inventoryAction != null && inventoryAction.WasPressedThisFrame() && !wheelOpen)
         {
@@ -83,6 +87,7 @@ public class InventoryUI : MonoBehaviour
     {
         if (overlay == null) return;
         IsOpen = false;
+        ClosedFrame = Time.frameCount;
         overlay.style.display = DisplayStyle.None;
         SetInputBlocked(false);
         Cursor.lockState = CursorLockMode.Locked;

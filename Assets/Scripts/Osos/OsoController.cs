@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 //Oso que deambula por su zona y huye del guardabosques cuando se acerca
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(AudioSource))]
 public class OsoController : MonoBehaviour
 {
     public ZonaOsos zona;
@@ -18,6 +19,15 @@ public class OsoController : MonoBehaviour
     [Range(0f, 1f)] public float sitChance = 0.3f;
     public float speedDampTime = 0.1f;
 
+    [Header("Rugido")]
+    public AudioClip rugido;
+    [Tooltip("Tiempo minimo entre dos rugidos del mismo oso")]
+    public float roarCooldown = 6f;
+    [Tooltip("Segundos minimo y maximo entre rugidos espontaneos mientras descansa")]
+    public Vector2 idleRoarInterval = new Vector2(20f, 45f);
+    [Tooltip("Variacion aleatoria del tono para que no todos los osos suenen igual")]
+    public float pitchVariation = 0.1f;
+
     enum State { Idle, Wander, Flee }
 
     private State state;
@@ -25,6 +35,9 @@ public class OsoController : MonoBehaviour
     private float fleeRepathTimer;
     private NavMeshAgent agent;
     private Animator animator;
+    private AudioSource audioSource;
+    private float lastRoarTime = -Mathf.Infinity;
+    private float idleRoarTimer;
 
     //IDs de los parametros del Animator
     static readonly int SpeedHash = Animator.StringToHash("Speed");
@@ -37,6 +50,8 @@ public class OsoController : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        idleRoarTimer = Random.Range(idleRoarInterval.x, idleRoarInterval.y);
 
         if (zona == null)
         {
@@ -69,6 +84,12 @@ public class OsoController : MonoBehaviour
         {
             case State.Idle:
                 idleTimer -= Time.deltaTime;
+                idleRoarTimer -= Time.deltaTime;
+                if (idleRoarTimer <= 0f)
+                {
+                    idleRoarTimer = Random.Range(idleRoarInterval.x, idleRoarInterval.y);
+                    Roar();
+                }
                 if (idleTimer <= 0f) EnterWander();
                 break;
 
@@ -123,6 +144,16 @@ public class OsoController : MonoBehaviour
         animator.SetBool(SentadoHash, false);
         agent.speed = runSpeed;
         SetFleeDestination();
+        Roar();
+    }
+
+    //Ruge si ha pasado el tiempo de espera desde el ultimo rugido
+    void Roar()
+    {
+        if (rugido == null || Time.time - lastRoarTime < roarCooldown) return;
+        lastRoarTime = Time.time;
+        audioSource.pitch = 1f + Random.Range(-pitchVariation, pitchVariation);
+        audioSource.PlayOneShot(rugido);
     }
 
     //Prueba varias direcciones alejandose del guardabosques y elige la que deja mas lejos de el,
