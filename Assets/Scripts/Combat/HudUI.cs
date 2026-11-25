@@ -64,7 +64,9 @@ public class HudUI : MonoBehaviour
         bool inventoryOpen = (inventory != null && inventory.IsOpen) || (weaponWheel != null && weaponWheel.IsOpen);
         bool scoped = shooter != null && shooter.IsScoped;
 
-        crosshair.style.display = hasWeapon && !inventoryOpen && !scoped ? DisplayStyle.Flex : DisplayStyle.None;
+        //La mira solo aparece mientras se apunta (clic derecho); con el catalejo se usa la suya propia
+        bool aiming = shooter != null && shooter.IsAiming;
+        crosshair.style.display = hasWeapon && aiming && !inventoryOpen && !scoped ? DisplayStyle.Flex : DisplayStyle.None;
         ammoPanel.style.display = hasWeapon ? DisplayStyle.Flex : DisplayStyle.None;
         controlsHint.style.display = hasWeapon && !inventoryOpen && !scoped ? DisplayStyle.Flex : DisplayStyle.None;
         UpdateScope(scoped);
