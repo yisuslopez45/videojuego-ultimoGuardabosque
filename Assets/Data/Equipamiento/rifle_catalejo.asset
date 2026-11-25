@@ -23,7 +23,7 @@ MonoBehaviour:
   twoHanded: 1
   moveSpeedMultiplier: 0.9
   damage: 60
-  range: 150
+  range: 300
   fireRate: 1.2
   magazineSize: 5
   startingReserve: 25
@@ -32,8 +32,15 @@ MonoBehaviour:
   aimSpread: 0.15
   impactForce: 10
   explosionRadius: 0
-  aimFov: 22
+  aimFov: 40
   recoil: 3
+  hasScope: 1
+  scopeFov: 10
+  scopeMinFov: 5
+  scopeMaxFov: 16
+  scopeDelay: 0.2
+  scopeSpread: 0
+  scopeSway: 0.35
   animReposo: {fileID: 7400000, guid: 3d083782c5f55184ebfaade3ab85e3f0, type: 2}
   animCaminar: {fileID: 7400000, guid: bd1c762730bff6cdcb98f494b39c7339, type: 2}
   animApuntar: {fileID: 7400000, guid: 31e0d0e134741a24db159c73aa9c8f68, type: 2}

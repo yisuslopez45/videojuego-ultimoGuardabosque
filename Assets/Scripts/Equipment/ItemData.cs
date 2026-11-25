@@ -59,6 +59,21 @@ public class ItemData : ScriptableObject
     [Tooltip("Retroceso: grados que sube la camara en cada disparo")]
     public float recoil = 2f;
 
+    [Header("Mira telescopica (armas de largo alcance)")]
+    [Tooltip("Al apuntar se mira por el catalejo: la mira ocupa toda la pantalla")]
+    public bool hasScope;
+    [Tooltip("Campo de vision al entrar en la mira (menor = mas aumentos)")]
+    public float scopeFov = 10f;
+    [Tooltip("Limites de zoom con la rueda del raton")]
+    public float scopeMinFov = 5f;
+    public float scopeMaxFov = 16f;
+    [Tooltip("Segundos apuntando antes de mirar por el catalejo")]
+    public float scopeDelay = 0.2f;
+    [Tooltip("Dispersion en grados mirando por el catalejo")]
+    public float scopeSpread = 0f;
+    [Tooltip("Balanceo del pulso en grados (Shift lo reduce mientras dura la respiracion)")]
+    public float scopeSway = 0.35f;
+
     [Header("Animaciones (solo armas)")]
     public AnimationClip animReposo;
     public AnimationClip animCaminar;

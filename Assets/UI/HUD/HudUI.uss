@@ -96,3 +96,80 @@
     font-size: 14px;
     color: rgba(236, 228, 210, 0.7);
 }
+
+/* Mira del catalejo a pantalla completa */
+.scope-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+}
+
+.scope-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Informacion en la franja negra de la izquierda */
+.scope-info {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    translate: 0 -50%;
+    width: 230px;
+}
+
+.scope-zoom {
+    font-size: 40px;
+    -unity-font-style: bold;
+    color: rgb(222, 180, 82);
+}
+
+.scope-breath {
+    margin-top: 10px;
+}
+
+.scope-breath-label {
+    font-size: 15px;
+    color: rgb(176, 168, 150);
+    padding: 0;
+    margin-bottom: 4px;
+}
+
+.scope-breath-track {
+    height: 8px;
+    background-color: rgb(46, 62, 48);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.scope-breath-fill {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(222, 180, 82);
+    border-radius: 4px;
+}
+
+.scope-breath-fill--holding {
+    background-color: rgb(236, 228, 210);
+}
+
+.scope-breath-fill--empty {
+    background-color: rgb(214, 96, 72);
+}
+
+.scope-hint {
+    margin-top: 14px;
+    font-size: 14px;
+    color: rgba(236, 228, 210, 0.6);
+    white-space: normal;
+}
+
+.scope-hint--next {
+    margin-top: 2px;
+}
