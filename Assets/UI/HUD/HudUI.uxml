@@ -30,6 +30,11 @@
             </ui:VisualElement>
             <ui:Label name="reload" text="Recargando..." class="reload" picking-mode="Ignore" />
         </ui:VisualElement>
+        <ui:VisualElement name="stamina" class="stamina" picking-mode="Ignore">
+            <ui:VisualElement class="stamina-track" picking-mode="Ignore">
+                <ui:VisualElement name="stamina-fill" class="stamina-fill" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:Label name="controls-hint" text="Clic der.: apuntar   ·   Clic izq.: disparar   ·   R: recargar   ·   Tab: armas   ·   I: accesorios" class="controls-hint" picking-mode="Ignore" />
     </ui:VisualElement>
 </ui:UXML>

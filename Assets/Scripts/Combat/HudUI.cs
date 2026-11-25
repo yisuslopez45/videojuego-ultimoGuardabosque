@@ -16,6 +16,7 @@ public class HudUI : MonoBehaviour
 
     private VisualElement crosshair, ammoPanel, top, bottom, left, right;
     private VisualElement scopeLayer, breathFill;
+    private VisualElement stamina, staminaFill;
     private ScopeOverlay scopeOverlay;
     private Label scopeZoom;
     private Label weaponName, magLabel, reserveLabel, reloadLabel, controlsHint;
@@ -36,6 +37,8 @@ public class HudUI : MonoBehaviour
         reloadLabel = root.Q<Label>("reload");
         controlsHint = root.Q<Label>("controls-hint");
         scopeLayer = root.Q("scope-layer");
+        stamina = root.Q("stamina");
+        staminaFill = root.Q("stamina-fill");
         scopeZoom = root.Q<Label>("scope-zoom");
         breathFill = root.Q("scope-breath-fill");
         if (scopeLayer != null && scopeOverlay == null)
@@ -70,6 +73,7 @@ public class HudUI : MonoBehaviour
         ammoPanel.style.display = hasWeapon ? DisplayStyle.Flex : DisplayStyle.None;
         controlsHint.style.display = hasWeapon && !inventoryOpen && !scoped ? DisplayStyle.Flex : DisplayStyle.None;
         UpdateScope(scoped);
+        UpdateStamina();
         if (!hasWeapon) return;
 
         //La mira se abre o se cierra suavemente segun la dispersion actual
@@ -79,6 +83,16 @@ public class HudUI : MonoBehaviour
         bottom.style.top = gap;
         left.style.left = -gap - 12f;
         right.style.left = gap;
+    }
+
+    //Resistencia al correr: la barra aparece al gastarla y se pone roja si el jugador esta agotado
+    void UpdateStamina()
+    {
+        if (stamina == null || shooter == null || shooter.player == null) return;
+        playerController p = shooter.player;
+        stamina.EnableInClassList("stamina--visible", p.Stamina < 0.999f);
+        staminaFill.style.width = Length.Percent(p.Stamina * 100f);
+        staminaFill.EnableInClassList("stamina-fill--exhausted", p.IsExhausted);
     }
 
     //Mira del catalejo: aumentos y respiracion
