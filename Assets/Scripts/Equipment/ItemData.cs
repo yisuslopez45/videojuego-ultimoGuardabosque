@@ -59,6 +59,14 @@ public class ItemData : ScriptableObject
     [Tooltip("Retroceso: grados que sube la camara en cada disparo")]
     public float recoil = 2f;
 
+    [Header("Sonidos")]
+    public AudioClip shotSound;
+    [Tooltip("Volumen del disparo de esta arma (1 = original; mas de 1 lo amplifica, demasiado puede distorsionar)")]
+    [Range(0f, 4f)] public float shotVolume = 1f;
+    public AudioClip reloadSound;
+    [Tooltip("Segundos desde que empieza la recarga hasta que suena (para que coincida con la animacion)")]
+    public float reloadSoundDelay = 0f;
+
     [Header("Mira telescopica (armas de largo alcance)")]
     [Tooltip("Al apuntar se mira por el catalejo: la mira ocupa toda la pantalla")]
     public bool hasScope;

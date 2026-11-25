@@ -34,6 +34,16 @@ MonoBehaviour:
   explosionRadius: 0
   aimFov: 50
   recoil: 1.5
+  shotSound: {fileID: 8300000, guid: 616879ac687aec9cebdf15057753fe34, type: 3}
+  reloadSound: {fileID: 8300000, guid: 713ee0001e61d4f16ad5cf0b3bbb105b, type: 3}
+  reloadSoundDelay: 0.76
+  hasScope: 0
+  scopeFov: 10
+  scopeMinFov: 5
+  scopeMaxFov: 16
+  scopeDelay: 0.2
+  scopeSpread: 0
+  scopeSway: 0.35
   animReposo: {fileID: 7400000, guid: f995996c0a9a3688da7cae60ee9472a9, type: 2}
   animCaminar: {fileID: 7400000, guid: 8481891bbfaabf5e1a319d66162c10b0, type: 2}
   animApuntar: {fileID: 7400000, guid: bc5bc5e362aa84f7eb0408cc930bcd3e, type: 2}

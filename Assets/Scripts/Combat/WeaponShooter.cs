@@ -28,6 +28,12 @@ public class WeaponShooter : MonoBehaviour
     [Tooltip("Segundos que el jugador sigue mirando al frente tras disparar sin apuntar")]
     public float hipFireLookTime = 0.6f;
 
+    [Header("Sonido")]
+    [Range(0f, 1f)] public float shotVolume = 1f;
+    [Range(0f, 1f)] public float reloadVolume = 0.8f;
+    [Tooltip("Variacion aleatoria del tono de cada disparo para que no suenen todos iguales")]
+    [Range(0f, 0.2f)] public float shotPitchVariation = 0.06f;
+
     [Header("Mira telescopica")]
     [Tooltip("Cambio de campo de vision por cada paso de la rueda del raton")]
     public float scopeZoomStep = 2.5f;
@@ -56,6 +62,8 @@ public class WeaponShooter : MonoBehaviour
     private InputAction attackAction;
     private InputAction reloadAction;
     private InputAction runAction;
+    private AudioSource shotSource;
+    private AudioSource reloadSource;
     private float aimHeldTime;
     private float scopeFov;
     private bool breathExhausted;
@@ -79,6 +87,8 @@ public class WeaponShooter : MonoBehaviour
         runAction = input.actions["Run"];
         head = player.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head);
         cameraController.ScopeEye = head;
+        shotSource = CreateAudioSource("SonidoDisparo");
+        reloadSource = CreateAudioSource("SonidoRecarga");
         equipment.OnEquipmentChanged += HandleEquipmentChanged;
         CreateTracer();
     }
@@ -114,7 +124,8 @@ public class WeaponShooter : MonoBehaviour
 
     void HandleEquipmentChanged()
     {
-        //Cambiar de arma cancela la recarga en curso
+        //Cambiar de arma cancela la recarga en curso (y su sonido)
+        if (reloadSource != null) reloadSource.Stop();
         if (reloadRoutine != null) StopCoroutine(reloadRoutine);
         reloadRoutine = null;
         IsReloading = false;
@@ -166,6 +177,7 @@ public class WeaponShooter : MonoBehaviour
         GetAmmo(weapon).magazine--;
         lookAheadTimer = hipFireLookTime;
         weaponAnimator.PlayFire();
+        PlayShotSound(weapon);
 
         //Direccion: centro de la camara con dispersion aleatoria dentro de un cono
         Transform camT = cameraController.transform;
@@ -238,6 +250,36 @@ public class WeaponShooter : MonoBehaviour
             if (c.attachedRigidbody != null)
                 c.attachedRigidbody.AddExplosionForce(weapon.impactForce * 2f, center, weapon.explosionRadius, 0.5f, ForceMode.Impulse);
         }
+    }
+
+    // ---------- Sonido ----------
+
+    //El sonido del arma del jugador se oye igual sin importar hacia donde mire la camara (2D)
+    AudioSource CreateAudioSource(string sourceName)
+    {
+        var go = new GameObject(sourceName);
+        go.transform.SetParent(player.transform, false);
+        var source = go.AddComponent<AudioSource>();
+        source.playOnAwake = false;
+        source.spatialBlend = 0f;
+        return source;
+    }
+
+    void PlayShotSound(ItemData weapon)
+    {
+        if (weapon.shotSound == null) return;
+        //PlayOneShot permite que los disparos seguidos se solapen sin cortarse
+        shotSource.pitch = 1f + UnityEngine.Random.Range(-shotPitchVariation, shotPitchVariation);
+        shotSource.PlayOneShot(weapon.shotSound, shotVolume * weapon.shotVolume);
+    }
+
+    void PlayReloadSound(ItemData weapon)
+    {
+        if (weapon.reloadSound == null) return;
+        reloadSource.Stop();
+        reloadSource.clip = weapon.reloadSound;
+        reloadSource.volume = reloadVolume;
+        reloadSource.PlayDelayed(Mathf.Max(0f, weapon.reloadSoundDelay));
     }
 
     // ---------- Catalejo ----------
@@ -320,6 +362,7 @@ public class WeaponShooter : MonoBehaviour
     {
         IsReloading = true;
         weaponAnimator.PlayReload(weapon.reloadTime);
+        PlayReloadSound(weapon);
         OnAmmoChanged?.Invoke();
         yield return new WaitForSeconds(weapon.reloadTime);
         int needed = weapon.magazineSize - state.magazine;
