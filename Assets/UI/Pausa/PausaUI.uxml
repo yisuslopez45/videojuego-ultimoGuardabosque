@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="PausaUI.uss" />
+    <ui:VisualElement name="overlay" class="overlay">
+        <ui:VisualElement name="panel" class="panel">
+            <ui:Label text="Pausa" class="title" />
+            <ui:Button name="btn-continuar" text="Continuar" class="boton boton--principal" />
+            <ui:Button name="btn-menu" text="Menu principal" class="boton" />
+            <ui:Button name="btn-salir" text="Salir del juego" class="boton" />
+            <ui:Label text="Esc: continuar" class="hint" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
