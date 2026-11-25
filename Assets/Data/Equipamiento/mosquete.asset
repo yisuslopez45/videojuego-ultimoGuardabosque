@@ -16,6 +16,7 @@ MonoBehaviour:
   type: 0
   slot: 0
   icon: {fileID: 21300000, guid: 4555be84912d93b45ae5d0724cc0a5c4, type: 3}
+  wheelIcon: {fileID: 21300000, guid: c7c2c14b6a4bd2c7ea21601ba47be7dc, type: 3}
   prefab: {fileID: 5161642813215884, guid: 96c372dcdc5835e249fb4b225cff0b7e, type: 3}
   positionOffset: {x: -0.000000020601874, y: 0.06081075, z: 0.00000009181472}
   rotationOffset: {x: 305, y: 89.999954, z: 180.00002}
@@ -33,6 +34,17 @@ MonoBehaviour:
   explosionRadius: 0
   aimFov: 42
   recoil: 4
+  shotSound: {fileID: 8300000, guid: ba11f0f56ef99cbe385e25009853a707, type: 3}
+  shotVolume: 3
+  reloadSound: {fileID: 8300000, guid: fdd75005bdfa7d31880bd466651d5825, type: 3}
+  reloadSoundDelay: 1.01
+  hasScope: 0
+  scopeFov: 10
+  scopeMinFov: 5
+  scopeMaxFov: 16
+  scopeDelay: 0.2
+  scopeSpread: 0
+  scopeSway: 0.35
   animReposo: {fileID: 7400000, guid: 6bc13121daf74925280035f961ba9c7e, type: 2}
   animCaminar: {fileID: 7400000, guid: 8a06d2154033b2df4966a162374283c7, type: 2}
   animApuntar: {fileID: 7400000, guid: 4456b134f47655cc8893d7384d69c336, type: 2}

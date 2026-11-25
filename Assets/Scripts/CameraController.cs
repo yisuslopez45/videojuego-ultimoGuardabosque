@@ -41,6 +41,18 @@ public class CamaraController : MonoBehaviour
     private float normalFov;
     private Camera cam;
 
+    [Header("Mira telescopica")]
+    [Tooltip("Posicion del ojo respecto al hueso de la cabeza al mirar por el catalejo")]
+    public Vector3 scopeEyeOffset = new Vector3(0f, 0.06f, 0.12f);
+
+    //Modo catalejo: lo activa WeaponShooter. La camara se pone en el ojo del jugador con mucho zoom
+    public bool IsScoped { get; set; }
+    public float ScopeFov { get; set; } = 10f;
+    public Transform ScopeEye { get; set; }
+    //Balanceo del pulso en grados (x = horizontal, y = vertical)
+    public Vector2 ScopeSway { get; set; }
+    public float NormalFov => normalFov;
+
     [Header("Retroceso")]
     [Tooltip("Velocidad con la que la camara vuelve a su sitio tras el retroceso")]
     public float recoilRecovery = 8f;
@@ -97,9 +109,11 @@ public class CamaraController : MonoBehaviour
         if (Mouse.current == null || Cursor.lockState != CursorLockMode.Locked) return;
 
         //El delta del raton ya es el desplazamiento de este frame, no se multiplica por deltaTime
+        //Con zoom la sensibilidad baja en proporcion, para poder apuntar con precision
         Vector2 delta = Mouse.current.delta.ReadValue();
-        yaw += delta.x * mouseSensitivity;
-        pitch += (invertY ? delta.y : -delta.y) * mouseSensitivity;
+        float sensitivity = mouseSensitivity * (cam != null && normalFov > 0f ? cam.fieldOfView / normalFov : 1f);
+        yaw += delta.x * sensitivity;
+        pitch += (invertY ? delta.y : -delta.y) * sensitivity;
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
     }
 
@@ -116,6 +130,16 @@ public class CamaraController : MonoBehaviour
         float decay = 1f - Mathf.Exp(-recoilRecovery * Time.deltaTime);
         recoilPitch = Mathf.Lerp(recoilPitch, 0f, decay);
         recoilYaw = Mathf.Lerp(recoilYaw, 0f, decay);
+
+        //Catalejo: la camara mira desde el ojo del jugador (el modelo se oculta) y sin colisiones
+        if (IsScoped && ScopeEye != null)
+        {
+            aimBlend = 1f;
+            cam.fieldOfView = ScopeFov;
+            transform.rotation = Quaternion.Euler(Pitch + ScopeSway.y, Yaw + ScopeSway.x, 0f);
+            transform.position = ScopeEye.position + Quaternion.Euler(0f, Yaw, 0f) * scopeEyeOffset;
+            return;
+        }
 
         Quaternion rotation = Quaternion.Euler(Pitch, Yaw, 0f);
         Vector3 shoulder = Quaternion.Euler(0f, Yaw, 0f) * aimShoulderOffset * blend;

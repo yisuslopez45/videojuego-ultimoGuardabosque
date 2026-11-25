@@ -1,0 +1,216 @@
+/* Rueda de armas: misma paleta de bosque que el inventario */
+:root {
+    --verde-oscuro: rgb(28, 38, 30);
+    --verde: rgb(46, 62, 48);
+    --verde-claro: rgb(70, 92, 70);
+    --madera: rgb(122, 84, 52);
+    --dorado: rgb(222, 180, 82);
+    --texto: rgb(236, 228, 210);
+    --texto-suave: rgb(176, 168, 150);
+    --rojo: rgb(214, 96, 72);
+}
+
+.wheel-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(8, 14, 10, 0);
+    transition-property: background-color;
+    transition-duration: 0.15s;
+}
+
+.wheel-overlay--open {
+    background-color: rgba(8, 14, 10, 0.5);
+}
+
+/* Tamaño lo pone el script (2 x (radio exterior + 30)) */
+.wheel-area {
+    width: 660px;
+    height: 660px;
+    opacity: 0;
+    scale: 0.88 0.88;
+    transition-property: opacity, scale;
+    transition-duration: 0.15s;
+    transition-timing-function: ease-out-back;
+}
+
+.wheel-overlay--open .wheel-area {
+    opacity: 1;
+    scale: 1 1;
+}
+
+.wheel-ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.wheel-slots {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Cada slot es un punto en el centro de su sector; su contenido se centra sobre el */
+.wheel-slot {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+.wheel-slot-content {
+    position: absolute;
+    width: 200px;
+    height: 120px;
+    translate: -100px -60px;
+    align-items: center;
+    justify-content: center;
+    transition-property: scale;
+    transition-duration: 0.1s;
+}
+
+.wheel-slot-icon {
+    width: 180px;
+    height: 70px;
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-image-tint-color: rgba(255, 255, 255, 0.6);
+}
+
+.wheel-slot-text {
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: var(--texto-suave);
+    -unity-text-align: middle-center;
+    height: 72px;
+}
+
+.wheel-slot-ammo {
+    font-size: 17px;
+    color: var(--texto-suave);
+    -unity-font-style: bold;
+    margin-top: 2px;
+}
+
+.wheel-slot-ammo--empty {
+    color: var(--rojo);
+}
+
+.wheel-slot-badge {
+    position: absolute;
+    top: -2px;
+    font-size: 12px;
+    color: var(--dorado);
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+}
+
+/* Sector resaltado: icono a todo color y algo mas grande */
+.wheel-slot--selected .wheel-slot-content {
+    scale: 1.12 1.12;
+}
+
+.wheel-slot--selected .wheel-slot-icon {
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+.wheel-slot--selected .wheel-slot-text,
+.wheel-slot--selected .wheel-slot-ammo {
+    color: var(--texto);
+}
+
+/* Informacion del centro */
+.wheel-info {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 250px;
+    translate: -125px -50%;
+    align-items: center;
+}
+
+.info-name {
+    font-size: 24px;
+    -unity-font-style: bold;
+    color: var(--texto);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.info-ammo {
+    flex-direction: row;
+    align-items: flex-end;
+    margin-top: 2px;
+}
+
+.info-mag {
+    font-size: 34px;
+    -unity-font-style: bold;
+    color: var(--dorado);
+    padding: 0;
+}
+
+.info-reserve {
+    font-size: 20px;
+    color: var(--texto-suave);
+    padding-bottom: 5px;
+    margin-left: 4px;
+}
+
+.info-stats {
+    width: 200px;
+    margin-top: 8px;
+}
+
+.stat-row {
+    flex-direction: row;
+    align-items: center;
+    margin: 2px 0;
+}
+
+.stat-label {
+    width: 72px;
+    font-size: 14px;
+    color: var(--texto-suave);
+    padding: 0;
+}
+
+.stat-track {
+    flex-grow: 1;
+    height: 7px;
+    background-color: rgba(70, 92, 70, 0.7);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.stat-fill {
+    height: 100%;
+    width: 50%;
+    background-color: var(--dorado);
+    border-radius: 3px;
+}
+
+.info-state {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--dorado);
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+}
+
+.wheel-hint {
+    position: absolute;
+    bottom: 36px;
+    font-size: 16px;
+    color: var(--texto-suave);
+    background-color: rgba(28, 38, 30, 0.75);
+    border-radius: 6px;
+    padding: 6px 14px;
+}

@@ -22,6 +22,26 @@ public class playerController : MonoBehaviour
     //Lo activa WeaponShooter con el clic derecho: el jugador mira hacia donde apunta la camara
     public bool IsAiming { get; set; }
 
+    [Header("Resistencia (cansancio al correr)")]
+    [Tooltip("Segundos que se puede correr con la resistencia llena")]
+    public float maxRunTime = 4.2f;
+    [Tooltip("Segundos que tarda la resistencia en llenarse desde cero")]
+    public float staminaRecoverTime = 5f;
+    [Tooltip("Segundos sin correr antes de empezar a recuperarse")]
+    public float staminaRecoverDelay = 0.8f;
+    [Tooltip("Agotado: no se puede volver a correr hasta recuperar esta resistencia")]
+    [Range(0f, 1f)] public float staminaToRunAgain = 0.35f;
+
+    //Resistencia 0-1 y si esta agotado (lo usan el HUD y los sonidos del jugador)
+    public float Stamina { get; private set; } = 1f;
+    public bool IsExhausted { get; private set; }
+    public bool IsRunning => isRunning;
+    public bool IsCrouching => isCrouching;
+    public bool IsGrounded => controller != null && controller.isGrounded;
+    //Cuanto se esta moviendo el jugador (0-1, segun el input)
+    public float MoveAmount { get; private set; }
+    private float staminaRecoverTimer;
+
     private float verticalVelocity;
     private bool jumpPressed;   
     private CharacterController controller;
@@ -86,12 +106,14 @@ public class playerController : MonoBehaviour
             SetCrouch(wantsCrouch);
         }
 
-        //Corre solo mientras Shift esta presionado, hay movimiento y no esta agachado
+        //Corre solo mientras Shift esta presionado, hay movimiento, no esta agachado ni agotado
         //Solo se decide en el suelo: en el aire se conserva el estado del despegue
         if (isGrounded)
         {
-            isRunning = !isCrouching && !IsAiming && runAction.IsPressed() && input.sqrMagnitude > 0.01f;
+            isRunning = !isCrouching && !IsAiming && !IsExhausted && runAction.IsPressed() && input.sqrMagnitude > 0.01f;
         }
+        MoveAmount = input.magnitude;
+        UpdateStamina(isGrounded);
         float currentSpeed = isCrouching ? crouchSpeed : (isRunning ? runSpeed : speed);
         if (IsAiming) currentSpeed *= aimSpeedMultiplier;
 
@@ -158,6 +180,28 @@ public class playerController : MonoBehaviour
         move.y = verticalVelocity / currentSpeed;
 
         controller.Move(move * currentSpeed * Time.deltaTime);
+    }
+
+    //Correr gasta resistencia; al llegar a cero el jugador se agota y tiene que caminar hasta recuperarse
+    void UpdateStamina(bool isGrounded)
+    {
+        if (isRunning && isGrounded)
+        {
+            Stamina -= Time.deltaTime / Mathf.Max(maxRunTime, 0.01f);
+            staminaRecoverTimer = staminaRecoverDelay;
+            if (Stamina <= 0f)
+            {
+                Stamina = 0f;
+                IsExhausted = true;
+                isRunning = false;
+            }
+            return;
+        }
+
+        staminaRecoverTimer -= Time.deltaTime;
+        if (staminaRecoverTimer > 0f) return;
+        Stamina = Mathf.Min(1f, Stamina + Time.deltaTime / Mathf.Max(staminaRecoverTime, 0.01f));
+        if (IsExhausted && Stamina >= staminaToRunAgain) IsExhausted = false;
     }
 
     public void OnMove(InputValue value)

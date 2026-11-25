@@ -28,12 +28,32 @@ public class WeaponShooter : MonoBehaviour
     [Tooltip("Segundos que el jugador sigue mirando al frente tras disparar sin apuntar")]
     public float hipFireLookTime = 0.6f;
 
+    [Header("Sonido")]
+    [Range(0f, 1f)] public float shotVolume = 1f;
+    [Range(0f, 1f)] public float reloadVolume = 0.8f;
+    [Tooltip("Variacion aleatoria del tono de cada disparo para que no suenen todos iguales")]
+    [Range(0f, 0.2f)] public float shotPitchVariation = 0.06f;
+
+    [Header("Mira telescopica")]
+    [Tooltip("Cambio de campo de vision por cada paso de la rueda del raton")]
+    public float scopeZoomStep = 2.5f;
+    [Tooltip("Segundos que se puede contener la respiracion (Shift) y que tarda en recuperarse")]
+    public float breathHoldTime = 3f;
+    public float breathRecoverTime = 4f;
+
     //Avisa al HUD de cambios de municion o recarga
     public event Action OnAmmoChanged;
 
     public bool IsAiming { get; private set; }
     public bool IsReloading { get; private set; }
     public float CurrentSpread { get; private set; }
+    //Mirando por el catalejo de un arma de largo alcance (el HUD muestra la mira a pantalla completa)
+    public bool IsScoped { get; private set; }
+    //Aumentos actuales del catalejo (por ejemplo 6x)
+    public float ScopeMagnification { get; private set; }
+    //Respiracion disponible (0-1) y si se esta conteniendo
+    public float Breath { get; private set; } = 1f;
+    public bool HoldingBreath { get; private set; }
 
     private class AmmoState { public int magazine; public int reserve; }
     private readonly Dictionary<ItemData, AmmoState> ammo = new Dictionary<ItemData, AmmoState>();
@@ -41,6 +61,15 @@ public class WeaponShooter : MonoBehaviour
     private InputAction aimAction;
     private InputAction attackAction;
     private InputAction reloadAction;
+    private InputAction runAction;
+    private AudioSource shotSource;
+    private AudioSource reloadSource;
+    private float aimHeldTime;
+    private float scopeFov;
+    private bool breathExhausted;
+    private Transform head;
+    private readonly Dictionary<Renderer, UnityEngine.Rendering.ShadowCastingMode> hiddenRenderers =
+        new Dictionary<Renderer, UnityEngine.Rendering.ShadowCastingMode>();
     private float nextFireTime;
     private float lookAheadTimer;
     private Coroutine reloadRoutine;
@@ -55,6 +84,11 @@ public class WeaponShooter : MonoBehaviour
         aimAction = input.actions["Aim"];
         attackAction = input.actions["Attack"];
         reloadAction = input.actions["Reload"];
+        runAction = input.actions["Run"];
+        head = player.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head);
+        cameraController.ScopeEye = head;
+        shotSource = CreateAudioSource("SonidoDisparo");
+        reloadSource = CreateAudioSource("SonidoRecarga");
         equipment.OnEquipmentChanged += HandleEquipmentChanged;
         CreateTracer();
     }
@@ -69,6 +103,14 @@ public class WeaponShooter : MonoBehaviour
     public int MagazineAmmo => GetAmmo(equipment.CurrentWeapon)?.magazine ?? 0;
     public int ReserveAmmo => GetAmmo(equipment.CurrentWeapon)?.reserve ?? 0;
 
+    //Municion de cualquier arma (la usa la rueda de armas)
+    public void GetAmmoCounts(ItemData weapon, out int magazine, out int reserve)
+    {
+        AmmoState state = GetAmmo(weapon);
+        magazine = state?.magazine ?? 0;
+        reserve = state?.reserve ?? 0;
+    }
+
     AmmoState GetAmmo(ItemData weapon)
     {
         if (weapon == null) return null;
@@ -82,7 +124,8 @@ public class WeaponShooter : MonoBehaviour
 
     void HandleEquipmentChanged()
     {
-        //Cambiar de arma cancela la recarga en curso
+        //Cambiar de arma cancela la recarga en curso (y su sonido)
+        if (reloadSource != null) reloadSource.Stop();
         if (reloadRoutine != null) StopCoroutine(reloadRoutine);
         reloadRoutine = null;
         IsReloading = false;
@@ -104,7 +147,15 @@ public class WeaponShooter : MonoBehaviour
         weaponAnimator.SetAiming(IsAiming);
         weaponAnimator.AimPitch = cameraController.Pitch;
         if (weapon != null) cameraController.AimFov = weapon.aimFov;
-        CurrentSpread = weapon == null ? 0f : (IsAiming ? weapon.aimSpread : weapon.hipSpread);
+
+        //Catalejo: tras apuntar un instante con un arma de largo alcance se mira por la mira
+        aimHeldTime = IsAiming ? aimHeldTime + Time.deltaTime : 0f;
+        bool scoped = IsAiming && weapon.hasScope && aimHeldTime >= weapon.scopeDelay;
+        if (scoped != IsScoped) SetScoped(scoped, weapon);
+        if (IsScoped) UpdateScope(weapon);
+        else RecoverBreath();
+
+        CurrentSpread = weapon == null ? 0f : (IsScoped ? weapon.scopeSpread : (IsAiming ? weapon.aimSpread : weapon.hipSpread));
 
         UpdateTracer();
         if (!canUse) return;
@@ -126,6 +177,7 @@ public class WeaponShooter : MonoBehaviour
         GetAmmo(weapon).magazine--;
         lookAheadTimer = hipFireLookTime;
         weaponAnimator.PlayFire();
+        PlayShotSound(weapon);
 
         //Direccion: centro de la camara con dispersion aleatoria dentro de un cono
         Transform camT = cameraController.transform;
@@ -138,12 +190,14 @@ public class WeaponShooter : MonoBehaviour
 
         Transform muzzle = equipment.WeaponMuzzle;
         Vector3 muzzlePos = muzzle != null ? muzzle.position : player.transform.position + Vector3.up * 1.4f;
+        //Por el catalejo el arma no se ve: el trazador sale justo delante de la camara y no hay fogonazo
+        if (IsScoped) muzzlePos = camT.position + camT.forward * 1.5f - camT.up * 0.15f;
 
         if (hasHit) ApplyHit(weapon, hit, direction);
         if (weapon.explosionRadius > 0f) Explode(weapon, endPoint);
 
         //Efectos
-        if (muzzleFlashPrefab != null && muzzle != null)
+        if (muzzleFlashPrefab != null && muzzle != null && !IsScoped)
             Instantiate(muzzleFlashPrefab, muzzlePos, Quaternion.LookRotation(endPoint - muzzlePos));
         if (hasHit && impactPrefab != null && weapon.explosionRadius <= 0f)
             Instantiate(impactPrefab, hit.point, Quaternion.LookRotation(hit.normal));
@@ -198,6 +252,102 @@ public class WeaponShooter : MonoBehaviour
         }
     }
 
+    // ---------- Sonido ----------
+
+    //El sonido del arma del jugador se oye igual sin importar hacia donde mire la camara (2D)
+    AudioSource CreateAudioSource(string sourceName)
+    {
+        var go = new GameObject(sourceName);
+        go.transform.SetParent(player.transform, false);
+        var source = go.AddComponent<AudioSource>();
+        source.playOnAwake = false;
+        source.spatialBlend = 0f;
+        return source;
+    }
+
+    void PlayShotSound(ItemData weapon)
+    {
+        if (weapon.shotSound == null) return;
+        //PlayOneShot permite que los disparos seguidos se solapen sin cortarse
+        shotSource.pitch = 1f + UnityEngine.Random.Range(-shotPitchVariation, shotPitchVariation);
+        shotSource.PlayOneShot(weapon.shotSound, shotVolume * weapon.shotVolume);
+    }
+
+    void PlayReloadSound(ItemData weapon)
+    {
+        if (weapon.reloadSound == null) return;
+        reloadSource.Stop();
+        reloadSource.clip = weapon.reloadSound;
+        reloadSource.volume = reloadVolume;
+        reloadSource.PlayDelayed(Mathf.Max(0f, weapon.reloadSoundDelay));
+    }
+
+    // ---------- Catalejo ----------
+
+    void SetScoped(bool scoped, ItemData weapon)
+    {
+        IsScoped = scoped;
+        cameraController.IsScoped = scoped;
+        if (scoped)
+        {
+            scopeFov = weapon.scopeFov;
+            //El jugador desaparece de la vista pero sigue proyectando su sombra
+            hiddenRenderers.Clear();
+            foreach (Renderer r in player.GetComponentsInChildren<Renderer>())
+            {
+                hiddenRenderers[r] = r.shadowCastingMode;
+                r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+            }
+        }
+        else
+        {
+            foreach (var pair in hiddenRenderers)
+            {
+                if (pair.Key != null) pair.Key.shadowCastingMode = pair.Value;
+            }
+            hiddenRenderers.Clear();
+            cameraController.ScopeSway = Vector2.zero;
+            HoldingBreath = false;
+        }
+    }
+
+    void UpdateScope(ItemData weapon)
+    {
+        //Rueda del raton: mas o menos aumentos
+        float scroll = Mouse.current != null ? Mouse.current.scroll.ReadValue().y : 0f;
+        if (Mathf.Abs(scroll) > 0.01f)
+            scopeFov = Mathf.Clamp(scopeFov - Mathf.Sign(scroll) * scopeZoomStep, weapon.scopeMinFov, weapon.scopeMaxFov);
+        cameraController.ScopeFov = scopeFov;
+        float normalFov = cameraController.NormalFov;
+        ScopeMagnification = Mathf.Tan(normalFov * 0.5f * Mathf.Deg2Rad) / Mathf.Tan(scopeFov * 0.5f * Mathf.Deg2Rad);
+
+        //Respiracion: con Shift se contiene unos segundos y el pulso casi no se mueve
+        HoldingBreath = runAction.IsPressed() && !breathExhausted;
+        if (HoldingBreath)
+        {
+            Breath -= Time.deltaTime / Mathf.Max(breathHoldTime, 0.01f);
+            if (Breath <= 0f)
+            {
+                Breath = 0f;
+                breathExhausted = true;
+                HoldingBreath = false;
+            }
+        }
+        else RecoverBreath();
+
+        //Balanceo del pulso: ruido suave; mas fuerte sin aire, casi nulo conteniendo la respiracion
+        float amount = weapon.scopeSway * (HoldingBreath ? 0.12f : (breathExhausted ? 1.8f : 1f));
+        float t = Time.time;
+        Vector2 sway = new Vector2(Mathf.PerlinNoise(t * 0.45f, 0.3f) - 0.5f, Mathf.PerlinNoise(0.7f, t * 0.38f) - 0.5f) * 2f * amount;
+        cameraController.ScopeSway = Vector2.Lerp(cameraController.ScopeSway, sway, 1f - Mathf.Exp(-6f * Time.deltaTime));
+    }
+
+    void RecoverBreath()
+    {
+        Breath = Mathf.Min(1f, Breath + Time.deltaTime / Mathf.Max(breathRecoverTime, 0.01f));
+        if (breathExhausted && Breath >= 0.5f) breathExhausted = false;
+    }
+
     // ---------- Recarga ----------
 
     void StartReload()
@@ -212,6 +362,7 @@ public class WeaponShooter : MonoBehaviour
     {
         IsReloading = true;
         weaponAnimator.PlayReload(weapon.reloadTime);
+        PlayReloadSound(weapon);
         OnAmmoChanged?.Invoke();
         yield return new WaitForSeconds(weapon.reloadTime);
         int needed = weapon.magazineSize - state.magazine;

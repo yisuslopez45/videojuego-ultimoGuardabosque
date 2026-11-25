@@ -11,6 +11,7 @@ public class PausaUI : MonoBehaviour
     public playerController player;
     public CamaraController cameraController;
     public InventoryUI inventory;
+    public WeaponWheelUI weaponWheel;
 
     [Tooltip("Nombre de la escena del menu principal (debe estar en Build Settings).")]
     public string escenaMenu = "Menu";
@@ -55,7 +56,9 @@ public class PausaUI : MonoBehaviour
         if (Keyboard.current == null || !Keyboard.current.escapeKey.wasPressedThisFrame) return;
 
         //El Esc que cierra el inventario no debe abrir tambien la pausa
+        //El Esc que cierra la rueda de armas tampoco
         if (inventory != null && (inventory.IsOpen || inventory.ClosedFrame == Time.frameCount)) return;
+        if (weaponWheel != null && (weaponWheel.IsOpen || weaponWheel.ClosedFrame == Time.frameCount)) return;
 
         if (IsPaused) Continuar();
         else Pausar();
