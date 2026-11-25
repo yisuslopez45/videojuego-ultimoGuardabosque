@@ -16,6 +16,6 @@
             </ui:VisualElement>
             <ui:Label name="reload" text="Recargando..." class="reload" picking-mode="Ignore" />
         </ui:VisualElement>
-        <ui:Label name="controls-hint" text="Clic der.: apuntar   ·   Clic izq.: disparar   ·   R: recargar   ·   Tab: inventario" class="controls-hint" picking-mode="Ignore" />
+        <ui:Label name="controls-hint" text="Clic der.: apuntar   ·   Clic izq.: disparar   ·   R: recargar   ·   Tab: armas   ·   I: accesorios" class="controls-hint" picking-mode="Ignore" />
     </ui:VisualElement>
 </ui:UXML>

@@ -25,6 +25,8 @@ public class ItemData : ScriptableObject
     public ItemType type;
     public EquipSlot slot;
     public Sprite icon;
+    [Tooltip("Icono de perfil para la rueda de armas (si esta vacio se usa 'icon')")]
+    public Sprite wheelIcon;
     public GameObject prefab;
 
     [Header("Colocacion respecto al hueso del slot")]

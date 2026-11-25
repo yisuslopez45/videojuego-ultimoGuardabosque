@@ -16,6 +16,7 @@ MonoBehaviour:
   type: 0
   slot: 0
   icon: {fileID: 21300000, guid: 84cd1a9193ade3ae5a3d858dd9fb3167, type: 3}
+  wheelIcon: {fileID: 21300000, guid: a1bc3a8099efc99e68cb0ae2a5d9ca03, type: 3}
   prefab: {fileID: 3086407919836363546, guid: 88a0ce443851405c1a0df46594a79cd1, type: 3}
   positionOffset: {x: -0.000000020601874, y: 0.06081075, z: 0.00000009181472}
   rotationOffset: {x: 278, y: 89.99997, z: 180.00005}

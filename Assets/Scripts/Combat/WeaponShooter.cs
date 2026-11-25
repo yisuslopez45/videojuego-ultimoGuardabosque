@@ -69,6 +69,14 @@ public class WeaponShooter : MonoBehaviour
     public int MagazineAmmo => GetAmmo(equipment.CurrentWeapon)?.magazine ?? 0;
     public int ReserveAmmo => GetAmmo(equipment.CurrentWeapon)?.reserve ?? 0;
 
+    //Municion de cualquier arma (la usa la rueda de armas)
+    public void GetAmmoCounts(ItemData weapon, out int magazine, out int reserve)
+    {
+        AmmoState state = GetAmmo(weapon);
+        magazine = state?.magazine ?? 0;
+        reserve = state?.reserve ?? 0;
+    }
+
     AmmoState GetAmmo(ItemData weapon)
     {
         if (weapon == null) return null;

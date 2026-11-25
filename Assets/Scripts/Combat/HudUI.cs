@@ -8,6 +8,7 @@ public class HudUI : MonoBehaviour
     public WeaponShooter shooter;
     public PlayerEquipment equipment;
     public InventoryUI inventory;
+    public WeaponWheelUI weaponWheel;
 
     [Tooltip("Pixeles de separacion de la mira por cada grado de dispersion")]
     public float crosshairPixelsPerDegree = 6f;
@@ -48,7 +49,7 @@ public class HudUI : MonoBehaviour
     {
         if (crosshair == null || equipment == null) return;
         bool hasWeapon = equipment.CurrentWeapon != null;
-        bool inventoryOpen = inventory != null && inventory.IsOpen;
+        bool inventoryOpen = (inventory != null && inventory.IsOpen) || (weaponWheel != null && weaponWheel.IsOpen);
 
         crosshair.style.display = hasWeapon && !inventoryOpen ? DisplayStyle.Flex : DisplayStyle.None;
         ammoPanel.style.display = hasWeapon ? DisplayStyle.Flex : DisplayStyle.None;
